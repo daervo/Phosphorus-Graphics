@@ -1,5 +1,5 @@
 //http://www.youtube.com/user/thecplusplusguy
-#include "vector3d.h"
+#include "../headers/vector3d.h"
 
 
 vector3d::vector3d()

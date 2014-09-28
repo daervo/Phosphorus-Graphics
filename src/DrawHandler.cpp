@@ -1,31 +1,49 @@
 
-#include "SuperHeader.h"
+#include "../headers/SuperHeader.h"
 
-#include "Draw.h"
+#include "../headers/Draw.h"
+#include "../headers/Textures.h"
 
 GLint theta;
 
-void drawHandle(HDC hDC, meshLoader* scene){
+void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap){
 /* OpenGL animation code goes here */
 	unsigned int program=glCreateProgram();
 
-        glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glEnable(GL_TEXTURE_2D);
+	glShadeModel(GL_SMOOTH);		 // Enables Smooth Shading
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
+	glDepthFunc(GL_LEQUAL);			// The Type Of Depth Test To Do
+	glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);	// Really Nice Perspective Calculation
 
-        glPushMatrix();
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_DEPTH_TEST);
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
+	glEnable(GL_NORMALIZE);
+	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+
+	glPushMatrix();
 
 
-        glRotatef(theta, 1.0f, 1.0f, 1.0f);
-
-        //draw();
-        scene->draw(program);
+	glRotatef(theta, 1.0f, 1.0f, 1.0f);
 
 
-        glPopMatrix();
-        glFlush();
-        glFinish();
+	//scene->draw(program);
+	glPushMatrix();
+	glScaled(0.01, 0.01, 0.01);
+	glTranslated(0.0, 0.0, 1.0);
 
-        SwapBuffers(hDC);
+	scene->draw(textureIdMap);
+	glPopMatrix();
+
+
+	glPopMatrix();
+	glFlush();
+	glFinish();
+
+	SwapBuffers(hDC);
 
         theta++;
 }

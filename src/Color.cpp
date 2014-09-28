@@ -4,7 +4,7 @@
  *  Created on: 19/09/2014
  *      Author: Ervin
  */
-#include "Color.h"
+#include "../headers/Color.h"
 
 void Color::setColorType(COLORTYPES ctype){
 	switch (ctype){

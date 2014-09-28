@@ -9,22 +9,33 @@
 #define MESHLOADER_H_
 
 #include <vector>
-#include <cimport.h>
-#include <Importer.hpp>
-#include <scene.h>
-#include <postprocess.h>
-#include "mesh.h"
+#include "../headers/mesh.h"
+#include "SuperHeader.h"
 
 class meshLoader{
 	std::vector<mesh*> meshes;
 	void recursiveProcess(aiNode* node,const aiScene* scene);
 	void processMesh(aiMesh* mesh,const aiScene* scene);
 	unsigned int loadTexture(const char* filename);
+	const aiScene* mScene;
+	std::string path;
+	std::map<std::string, GLuint*> textureIdMap;
 	public:
-		meshLoader(const char* filename);
+		meshLoader(std::string filename);
 		~meshLoader();
-		void draw(unsigned int programId);
+		void draw(std::map<std::string, GLuint*> textureIdMap);
 		std::vector<mesh*>& getMeshes();
+		const aiScene* getScene();
+
+		std::string getPath(){
+			return path;
+		}
+		void setTextureIdMap(std::map<std::string, GLuint*> textureIdMap){
+			this->textureIdMap = textureIdMap;
+			if (textureIdMap.empty()){
+				cout<<"texturemap is empty"<<endl;
+			}
+		}
 };
 
 

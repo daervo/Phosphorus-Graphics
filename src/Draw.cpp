@@ -1,6 +1,6 @@
-#include "SuperHeader.h"
+#include "../headers/SuperHeader.h"
 
-#include "Draw.h"
+#include "../headers/Draw.h"
 
 void draw(){
 	//drawTriangle(NULL);

@@ -1,9 +1,10 @@
 
-#include "SuperHeader.h"
-#include "Enable.h"
-#include "Draw.h"
-#include "Disable.h"
-#include "meshLoader.h"
+#include "../headers/SuperHeader.h"
+#include "../headers/Enable.h"
+#include "../headers/Draw.h"
+#include "../headers/Disable.h"
+#include "../headers/meshLoader.h"
+#include "../headers/Textures.h"
 #include <fstream>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
@@ -79,7 +80,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     /* enable OpenGL for the window */
     EnableOpenGL(hwnd, &hDC, &hRC);
-    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus Graphics\\Debug\\test.blend");
+    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Zaralok.obj");
+	textures* tex= new textures(scene->getScene(), scene->getPath());
+	tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
 
     /* program main loop */
     while (!bQuit)
@@ -92,7 +95,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             DispatchMessage(&msg);
 
         }
-          drawHandle(hDC, scene);
+          drawHandle(hDC, scene, tex->getTextureIdMap());
     }
 
     /* shutdown OpenGL */

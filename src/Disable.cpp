@@ -1,4 +1,4 @@
-#include "SuperHeader.h"
+#include "../headers/SuperHeader.h"
 
 void disableOpenGL (HWND hwnd, HDC hDC, HGLRC hRC)
 {

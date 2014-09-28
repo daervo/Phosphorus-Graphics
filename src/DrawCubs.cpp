@@ -1,4 +1,4 @@
-#include "SuperHeader.h"
+#include "../headers/SuperHeader.h"
 
 void drawCube(){
     glColor3f(1.0f, 0.0f, 0.0f);

@@ -1,4 +1,4 @@
-#include "meshLoader.h"
+#include "../headers/meshLoader.h"
 using namespace std;
 
 
@@ -24,142 +24,27 @@ void meshLoader::recursiveProcess(aiNode* node,const aiScene* scene)
 
 void meshLoader::processMesh(aiMesh* m,const aiScene* scene)
 {
-	std::vector<vertexData> data;
-	std::vector<unsigned int> indices;
-	std::vector<textureData> textures;
-	aiColor4D col;
-	aiMaterial* mat=scene->mMaterials[m->mMaterialIndex];
-	aiGetMaterialColor(mat,AI_MATKEY_COLOR_DIFFUSE,&col);
-	vector3d defaultColor(col.r,col.g,col.b);
-
-
-	for(int i=0;i<m->mNumVertices;i++)
-	{
-			cout << "vertex number " << i << endl;
-			vertexData tmp;
-			vector3d tmpVec;
-
-			//position
-			tmpVec.x=m->mVertices[i].x;
-			tmpVec.y=m->mVertices[i].y;
-			tmpVec.z=m->mVertices[i].z;
-			tmp.position=tmpVec;
-			cout << "set position to " << i << " " << tmpVec.x <<  " " << tmpVec.y  << " " << tmpVec.z <<  endl;
-
-			//normals
-			tmpVec.x=m->mNormals[i].x;
-			tmpVec.y=m->mNormals[i].y;
-			tmpVec.z=m->mNormals[i].z;
-			tmp.normal=tmpVec;
-			cout << "set normal to " << i << " " << tmpVec.x <<  " " << tmpVec.y  << " " << tmpVec.z <<  endl;
-
-
-			//tangent
-			if(m->mTangents)
-			{
-				tmpVec.x=m->mTangents[i].x;
-				tmpVec.y=m->mTangents[i].y;
-				tmpVec.z=m->mTangents[i].z;
-				cout << "set tangent to " << i << " " << tmpVec.x <<  " " << tmpVec.y  << " " << tmpVec.z <<  endl;
-			}else{
-				tmpVec.x=1.0;
-				tmpVec.y=tmpVec.z=0;
-				cout << "set tangent to " << i << " " << tmpVec.x <<  " " << tmpVec.y  << " " << tmpVec.z <<  endl;
-			}
-			tmp.tangent=tmpVec;
-
-
-			//colors
-			if(m->mColors[0])
-			{
-				//!= material color
-				tmpVec.x=m->mColors[0][i].r;
-				tmpVec.y=m->mColors[0][i].g;
-				tmpVec.z=m->mColors[0][i].b;
-				cout << "set mat color to " << i << " " << tmpVec.x <<  " " << tmpVec.y  << " " << tmpVec.z <<  endl;
-			}else{
-				tmpVec=defaultColor;
-			}
-			tmp.color=tmpVec;
-
-			//color
-			if(m->mTextureCoords[0])
-			{
-				tmpVec.x=m->mTextureCoords[0][i].x;
-				tmpVec.y=m->mTextureCoords[0][i].y;
-			}else{
-				tmpVec.x=tmpVec.y=tmpVec.z=0.0;
-			}
-			tmp.U=tmpVec.x;
-			tmp.V=tmpVec.y;
-			data.push_back(tmp);
-	}
-
-	for(int i=0;i<m->mNumFaces;i++)
-	{
-		aiFace face=m->mFaces[i];
-		for(int j=0;j<face.mNumIndices;j++) //0..2
-		{
-			indices.push_back(face.mIndices[j]);
-		}
-	}
-
-
-	for(int i=0;i<mat->GetTextureCount(aiTextureType_DIFFUSE);i++)
-	{
-		aiString str;
-		mat->GetTexture(aiTextureType_DIFFUSE,i,&str);
-		textureData tmp;
-		tmp.id=loadTexture(str.C_Str());
-		tmp.type=0;
-		textures.push_back(tmp);
-	}
-	meshes.push_back(new mesh(m, &data,&indices,&textures));
+	meshes.push_back(new mesh(m, scene->mMaterials[m->mMaterialIndex]));
 }
 
-
-unsigned int meshLoader::loadTexture(const char* filename)
-{
-	/*unsigned int num;
-	glGenTextures(1,&num);
-	//SDL_Surface* img=IMG_Load(filename);
-	if(img==NULL)
-	{
-		//std::cout << "img was not loaded" << std::endl;
-		return -1;
-	}
-	//SDL_PixelFormat form={NULL,32,4,0,0,0,0,0,0,0,0,0xff000000,0x00ff0000,0x0000ff00,0x000000ff,0,255};
-	//SDL_Surface* img2=SDL_ConvertSurface(img,&form,SDL_SWSURFACE);
-	if(img2==NULL)
-	{
-		//std::cout << "img2 was not loaded" << std::endl;
-		return -1;
-	}
-	glBindTexture(GL_TEXTURE_2D,num);
-
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-	//glTexImage2D(GL_TEXTURE_2D,0,GL_RGBA,img2->w,img2->h,0,GL_RGBA,GL_UNSIGNED_INT_8_8_8_8,img2->pixels);
-	//SDL_FreeSurface(img);
-	//SDL_FreeSurface(img2);
-	return num;*/
-
-	return 0;
-}
-
-
-meshLoader::meshLoader(const char* filename)
+meshLoader::meshLoader(std::string filename)
 {//loads data from the file using assimp
-	const aiScene* scene=aiImportFile(filename, aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
+	path = filename;
+	const aiScene* scene=aiImportFile(filename.data(), aiProcess_GenSmoothNormals | aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_FlipUVs);
 	if(scene/*aiGetErrorString()*/==NULL)
 	{
 		std::cout << "The file wasn't successfuly opened " << aiGetErrorString() << std::endl;
 		return;
 	}else{
 		std::cout << "The file was successfuly opened " << filename << std::endl;
+		mScene = scene;
 	}
 
 	recursiveProcess(scene->mRootNode,scene);
+}
+
+const aiScene* meshLoader::getScene(){
+	return mScene;
 }
 
 meshLoader::~meshLoader()
@@ -168,10 +53,10 @@ meshLoader::~meshLoader()
 		delete meshes[i];
 }
 
-void meshLoader::draw(unsigned int programId)
+void meshLoader::draw(std::map<std::string, GLuint*> textureIdMap)
 {
 	for(int i=0;i<meshes.size();i++)
-		meshes[i]->draw(programId);
+		meshes[i]->draw(textureIdMap);
 }
 
 std::vector<mesh*>& meshLoader::getMeshes()
