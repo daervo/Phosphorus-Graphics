@@ -3,6 +3,11 @@
 *.lo
 *.o
 *.obj
+*.3ds
+*.dae
+*.tga
+*.png
+*.jpg
 
 # Precompiled Headers
 *.gch
