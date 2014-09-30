@@ -24,7 +24,7 @@ public:
 
 	std::map<std::string, GLuint*> getTextureIdMap(){
 		if (textureIdMap.empty()){
-			cout<< "warning: map is empty"<<endl;
+			cout<< "warning: map is empty, texture format may be unsupported"<<endl;
 		}
 		return textureIdMap;
 	}

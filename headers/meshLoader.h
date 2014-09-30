@@ -14,9 +14,12 @@
 
 class meshLoader{
 	std::vector<mesh*> meshes;
-	void recursiveProcess(aiNode* node,const aiScene* scene);
-	void processMesh(aiMesh* mesh,const aiScene* scene);
+	void recursiveProcess(const aiScene* sc, aiNode* nd,  float scale);
+	void apply_material(const struct aiMaterial *mtl);
 	unsigned int loadTexture(const char* filename);
+	void color4_to_float4(aiColor4D *c, float f[4]);
+	void set_float4(float f[4], float a, float b, float c, float d);
+	void Color4f(const aiColor4D *color);
 	const aiScene* mScene;
 	std::string path;
 	std::map<std::string, GLuint*> textureIdMap;

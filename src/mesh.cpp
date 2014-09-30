@@ -36,6 +36,10 @@ void set_float4(float f[4], float a, float b, float c, float d)
 }
 
 /* ---------------------------------------------------------------------------- */
+void Color4f(const aiColor4D *color)
+{
+	glColor4f(color->r, color->g, color->b, color->a);
+}
 void mesh::apply_material(const struct aiMaterial *mtl, std::map<std::string, GLuint*> textureIdMap)
 {
 	float c[4];
@@ -120,16 +124,10 @@ void mesh::apply_material(const struct aiMaterial *mtl, std::map<std::string, GL
 	else
 		glEnable(GL_CULL_FACE);*/
 }
-
-void Color4f(const aiColor4D *color)
-{
-	glColor4f(color->r, color->g, color->b, color->a);
-}
-
 void mesh::draw(std::map<std::string, GLuint*> textureIdMap)
 {
 	apply_material(mMat, textureIdMap);
-	int t = 0;
+	unsigned int t = 0;
 	for (t = 0; t < mMesh->mNumFaces; ++t) {
 		aiFace* face = &mMesh->mFaces[t];
 		GLenum face_mode;
@@ -142,6 +140,7 @@ void mesh::draw(std::map<std::string, GLuint*> textureIdMap)
 		if(mMesh->mColors[0] != NULL)
 		{
 			glEnable(GL_COLOR_MATERIAL);
+			cout<<"enabled color"<<endl;
 		}
 		else
 		{
@@ -158,21 +157,21 @@ void mesh::draw(std::map<std::string, GLuint*> textureIdMap)
 
 		glBegin(face_mode);
 
-		for(int i = 0; i < face->mNumIndices; i++)		// go through all vertices in face
-					{
-						int vertexIndex = face->mIndices[i];	// get group index for current index
-						if(mMesh->mColors[0] != NULL)
-							Color4f(&mMesh->mColors[0][vertexIndex]);
-						if(mMesh->mNormals != NULL)
+		for(unsigned int i = 0; i < face->mNumIndices; i++)		// go through all vertices in face
+		{
+			int vertexIndex = face->mIndices[i];	// get group index for current index
+			if(mMesh->mColors[0] != NULL)
+				Color4f(&mMesh->mColors[0][vertexIndex]);
+			if(mMesh->mNormals != NULL)
 
-							if(mMesh->HasTextureCoords(0))		//HasTextureCoords(texture_coordinates_set)
-							{
-								glTexCoord2f(mMesh->mTextureCoords[0][vertexIndex].x, 1 - mMesh->mTextureCoords[0][vertexIndex].y); //mTextureCoords[channel][vertex]
-							}
+				if(mMesh->HasTextureCoords(0))		//HasTextureCoords(texture_coordinates_set)
+				{
+					glTexCoord2f(mMesh->mTextureCoords[0][vertexIndex].x, 1 - mMesh->mTextureCoords[0][vertexIndex].y); //mTextureCoords[channel][vertex]
+				}
 
-							glNormal3fv(&mMesh->mNormals[vertexIndex].x);
-							glVertex3fv(&mMesh->mVertices[vertexIndex].x);
-					}
+			glNormal3fv(&mMesh->mNormals[vertexIndex].x);
+			glVertex3fv(&mMesh->mVertices[vertexIndex].x);
+		}
 
 		glEnd();
 	}

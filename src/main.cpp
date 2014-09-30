@@ -80,9 +80,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     /* enable OpenGL for the window */
     EnableOpenGL(hwnd, &hDC, &hRC);
-    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\minecraft\\ghv.obj");
-	textures* tex= new textures(scene->getScene(), scene->getPath());
-	tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\minecraft\\");
+    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Damaged Downtown\\Downtown_Damage_0.obj");
+	//textures* tex= new textures(scene->getScene(), scene->getPath());
+	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Texture\\");
+    std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
 
     /* program main loop */
     while (!bQuit)
@@ -95,7 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             DispatchMessage(&msg);
 
         }
-          drawHandle(hDC, scene, tex->getTextureIdMap());
+          drawHandle(hDC, scene, texMap);
     }
 
     /* shutdown OpenGL */
@@ -145,7 +146,4 @@ void setScreenSize(){
 
 
 }
-
-
-
 

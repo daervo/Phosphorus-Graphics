@@ -23,25 +23,27 @@ void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textu
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	glEnable(GL_NORMALIZE);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();				// Reset MV Matrix
 
-	glPushMatrix();
+	//glPushMatrix();
 
 
 	glRotatef(theta, 1.0f, 1.0f, 1.0f);
 
 
 	//scene->draw(program);
-	glPushMatrix();
-	glScaled(0.1, 0.1, 0.1);
-	glTranslated(0.0, 0.0, 1.0);
+	//glPushMatrix();
+	//glScaled(0.01, 0.01, 0.01);
+	//glTranslated(0.0, 0.0, 1.0);
 
 	scene->draw(textureIdMap);
-	glPopMatrix();
+	//glPopMatrix();
 
 
-	glPopMatrix();
-	glFlush();
-	glFinish();
+	//glPopMatrix();
+	//glFlush();
+	//glFinish();
 
 	SwapBuffers(hDC);
 
