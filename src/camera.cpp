@@ -7,11 +7,14 @@
 #include "../headers/camera.h"
 #include <glm/gtx/transform.hpp>
 
-Camera::Camera()
+Camera::Camera(GLfloat x, GLfloat y, GLfloat z, GLfloat xRot, GLfloat yRot, GLfloat zRot)
 {
+	this->x = x;
+	this->y = y;
+	this->z = z;
+	this->xRot = xRot;
+	this->yRot = yRot;
+	this->zRot = zRot;
 }
 
-glm::mat4 Camera::getWorldToViewMatrix() const
-{
-	return glm::lookAt(position, position + viewDirecton, UP);
-}
+

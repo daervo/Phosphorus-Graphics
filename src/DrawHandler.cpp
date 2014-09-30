@@ -6,7 +6,7 @@
 
 GLint theta;
 GLfloat xrot, yrot, zrot = 0.0f;
-void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap)
+void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap, Camera* camera)
 {
 /* OpenGL animation code goes here */
 	unsigned int program=glCreateProgram();
@@ -27,14 +27,21 @@ void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textu
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();				// Reset MV Matrix
 
-
-	glRotatef(theta, 1.0f, 1.0f, 1.0f);
 	glPushMatrix();
+	glRotatef(camera->getXRot(), 1.0f, 0.0f, 0.0f);
+	glRotatef(camera->getYRot(), 0.0f, 1.0f, 0.0f);
+	glRotatef(camera->getZRot(), 0.0f, 1.0f, 1.0f);
+	glTranslated(camera->getX(), camera->getY(), camera->getZ());
+	glPushMatrix();
+	//glRotatef(theta, 1.0f, 1.0f, 1.0f);
+	//glPushMatrix();
 	glScaled(0.05, 0.05, 0.05);
-	glTranslated(0.0, 0.0, 1.0);
+	//glTranslated(0.0, 0.0, 1.0);
 	scene->draw(textureIdMap);
 
 
+	//glPopMatrix();
+	glPopMatrix();
 	glPopMatrix();
 	glFlush();
 	glFinish();

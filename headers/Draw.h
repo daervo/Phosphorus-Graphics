@@ -6,7 +6,7 @@
 #include "meshLoader.h"
 #include "camera.h"
 
-void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap);
+void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap, Camera* camera);
 void draw();
 
 void drawTriangle(Triangle *triangle);

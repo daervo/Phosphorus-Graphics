@@ -22,7 +22,9 @@ GLboolean debugMode = GL_FALSE;
 GLboolean bQuit = GL_FALSE;
 
 meshLoader* scene;
-//Camera camera;
+GLfloat forward;
+GLfloat angle;
+Camera* camera = new Camera(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
@@ -98,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             DispatchMessage(&msg);
 
         }
-          drawHandle(hDC, scene, texMap);
+          drawHandle(hDC, scene, texMap, camera);
     }
 
     /* shutdown OpenGL */
@@ -123,6 +125,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             {
                 case VK_ESCAPE:
                     bQuit = GL_TRUE;
+                break;
+                case VK_UP:
+                	camera->addZ(-0.01);
+                break;
+                case VK_DOWN:
+                	camera->addZ(0.01);
+                break;
+                case VK_RIGHT:
+                    camera->addyRot(1.0);
+                break;
+                case VK_LEFT:
+                    camera->addyRot(-1.0);
                 break;
             }
         }
