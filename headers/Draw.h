@@ -4,7 +4,7 @@
 #include "SuperHeader.h"
 #include "Triangle.h"
 #include "meshLoader.h"
-
+#include "camera.h"
 
 void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap);
 void draw();

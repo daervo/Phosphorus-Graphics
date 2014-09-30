@@ -5,8 +5,9 @@
 #include "../headers/Textures.h"
 
 GLint theta;
-
-void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap){
+GLfloat xrot, yrot, zrot = 0.0f;
+void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap)
+{
 /* OpenGL animation code goes here */
 	unsigned int program=glCreateProgram();
 
@@ -26,26 +27,18 @@ void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textu
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();				// Reset MV Matrix
 
-	//glPushMatrix();
-
 
 	glRotatef(theta, 1.0f, 1.0f, 1.0f);
-
-
-	//scene->draw(program);
-	//glPushMatrix();
-	//glScaled(0.01, 0.01, 0.01);
-	//glTranslated(0.0, 0.0, 1.0);
-
+	glPushMatrix();
+	glScaled(0.05, 0.05, 0.05);
+	glTranslated(0.0, 0.0, 1.0);
 	scene->draw(textureIdMap);
-	//glPopMatrix();
 
 
-	//glPopMatrix();
-	//glFlush();
-	//glFinish();
+	glPopMatrix();
+	glFlush();
+	glFinish();
 
 	SwapBuffers(hDC);
-
-        theta++;
+	theta++;
 }

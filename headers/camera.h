@@ -7,10 +7,18 @@
 
 #ifndef CAMERA_H_
 #define CAMERA_H_
-#include <math.h>
+#include "SuperHeader.h"
+#include <glm/glm.hpp>
 
-class camera{
-	CMatrix
+class Camera{
+	glm::vec3 position;
+	glm::vec3 viewDirecton;
+	const glm::vec3 UP;
+public:
+	Camera();
+	~Camera();
+	glm::mat4 getWorldToViewMatrix() const;
+	void mouseUpdate( const glm::vec2& newMousePosition);
 };
 
 

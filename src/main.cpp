@@ -5,6 +5,7 @@
 #include "../headers/Disable.h"
 #include "../headers/meshLoader.h"
 #include "../headers/Textures.h"
+#include "../headers/camera.h"
 #include <fstream>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
@@ -21,6 +22,7 @@ GLboolean debugMode = GL_FALSE;
 GLboolean bQuit = GL_FALSE;
 
 meshLoader* scene;
+//Camera camera;
 
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
@@ -80,7 +82,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     /* enable OpenGL for the window */
     EnableOpenGL(hwnd, &hDC, &hRC);
-    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Damaged Downtown\\Downtown_Damage_0.obj");
+    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS");
 	//textures* tex= new textures(scene->getScene(), scene->getPath());
 	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Texture\\");
     std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
@@ -125,6 +127,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+
 
         default:
             return DefWindowProc(hwnd, uMsg, wParam, lParam);

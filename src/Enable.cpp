@@ -1,4 +1,8 @@
-#include <windows.h>
+
+#include "../headers/SuperHeader.h"
+
+#include "../headers/Draw.h"
+#include "../headers/Textures.h"
 
 void EnableOpenGL(HWND hwnd, HDC* hDC, HGLRC* hRC)
 {
@@ -30,7 +34,5 @@ void EnableOpenGL(HWND hwnd, HDC* hDC, HGLRC* hRC)
 
     wglMakeCurrent(*hDC, *hRC);
 
-    //Enabling z-buffer
-    //glEnable(GL_DEPTH_TEST);
-    //glDepthMask(GL_TRUE);
+
 }
