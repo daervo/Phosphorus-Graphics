@@ -63,11 +63,11 @@ void mesh::apply_material(const struct aiMaterial *mtl, std::map<std::string, GL
 				glBindTexture(GL_TEXTURE_2D, texId);
 			}
 		}else{
-			cout << "no texture found in " << texPath.data << endl;
+			//cout << "no texture found in " << texPath.data << endl;
 
 		}
 	}else{
-		cout << "no texture map" << endl;
+		//cout << "no texture map" << endl;
 	}
 
 

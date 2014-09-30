@@ -20,7 +20,7 @@ class textures{
 public:
 	textures(const aiScene *scene, std::string path);
 	~textures();
-	bool bindTextures(std::string basepath);
+	bool bindTextures(char* const basepath);
 
 	std::map<std::string, GLuint*> getTextureIdMap(){
 		if (textureIdMap.empty()){

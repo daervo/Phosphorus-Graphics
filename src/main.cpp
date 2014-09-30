@@ -80,9 +80,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     /* enable OpenGL for the window */
     EnableOpenGL(hwnd, &hDC, &hRC);
-    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Zaralok.obj");
+    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\minecraft\\ghv.obj");
 	textures* tex= new textures(scene->getScene(), scene->getPath());
-	tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
+	tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\minecraft\\");
 
     /* program main loop */
     while (!bQuit)

@@ -32,7 +32,7 @@ void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textu
 
 	//scene->draw(program);
 	glPushMatrix();
-	glScaled(0.01, 0.01, 0.01);
+	glScaled(0.1, 0.1, 0.1);
 	glTranslated(0.0, 0.0, 1.0);
 
 	scene->draw(textureIdMap);
