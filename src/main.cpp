@@ -5,6 +5,8 @@
 #include "../headers/meshLoader.h"
 #include "../headers/Textures.h"
 #include "../headers/camera.h"
+#include "../headers/mat4.h"
+#include "../headers/vector3d.h"
 #include <fstream>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
@@ -20,10 +22,13 @@ GLboolean debugMode = GL_FALSE;
 
 GLboolean bQuit = GL_FALSE;
 
-meshLoader* scene;
-GLfloat forward;
-GLfloat angle;
-Camera* camera = new Camera(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+std::vector<meshLoader*> scenes;
+mat4* viewMatrix = new mat4();
+vector3d position(0.0, 0.0, 0.0);
+vector3d scenePosition(0.0, 0.0, 0.0);
+
+GLfloat x = 0;
+GLfloat y = 0;
 
 int WINAPI WinMain(HINSTANCE hInstance,
                    HINSTANCE hPrevInstance,
@@ -83,7 +88,8 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     /* enable OpenGL for the window */
     EnableOpenGL(hwnd, &hDC, &hRC);
-    scene = new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS");
+    scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS"));
+    scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS"));
 	//textures* tex= new textures(scene->getScene(), scene->getPath());
 	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Texture\\");
     std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
@@ -99,7 +105,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             DispatchMessage(&msg);
 
         }
-          drawHandle(hDC, scene, texMap, camera);
+        drawHandle(hDC, scenes, texMap, viewMatrix, &position);
     }
 
     /* shutdown OpenGL */
@@ -110,9 +116,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 
     return msg.wParam;
 }
-
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	float velocity = 0.1;
     switch (uMsg)
     {
         case WM_DESTROY:
@@ -126,16 +132,36 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                     bQuit = GL_TRUE;
                 break;
                 case VK_UP:
-                	camera->addZ(-0.01);
+                	viewMatrix->lookUp(velocity);
+                	//viewMatrix->addForward(0.0, 0.001, 0.0);
                 break;
                 case VK_DOWN:
-                	camera->addZ(0.01);
+                	viewMatrix->lookUp(-velocity);
+                	//viewMatrix->addForward(0.0, -0.001, 0.0);
                 break;
                 case VK_RIGHT:
-                    camera->addyRot(1.0);
+                	viewMatrix->turnRight(velocity);
+                	//viewMatrix->addForward(0.1, 0.0, 0.0);
                 break;
                 case VK_LEFT:
-                    camera->addyRot(-1.0);
+                	viewMatrix->turnRight(-velocity);
+                	//viewMatrix->addForward(-0.1, 0.0, 0.0);
+                break;
+                case VK_NUMPAD8:
+                	position.changeZ(position.z+=velocity);
+                break;
+                case VK_NUMPAD5:
+                	position.changeZ(position.z-=velocity);
+                break;
+                case VK_NUMPAD4:
+                	position.changeX(position.x+=velocity);
+                break;
+                case VK_NUMPAD6:
+                	position.changeX(position.x-=velocity);
+                break;
+                case VK_SPACE:
+                	glm::vec2 mousePos(++x, ++y);
+                	viewMatrix->mouseUpdate(mousePos);
                 break;
             }
         }

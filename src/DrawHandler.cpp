@@ -2,13 +2,13 @@
 
 #include "../headers/Draw.h"
 #include "../headers/Textures.h"
+#include "../headers/mat4.h"
 
-GLint theta;
-GLfloat xrot, yrot, zrot = 0.0f;
-void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textureIdMap, Camera* camera)
+GLfloat theta;
+float matrix[16];
+void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, GLuint*> textureIdMap, mat4* viewMatrix, vector3d* position)
 {
-/* OpenGL animation code goes here */
-	unsigned int program=glCreateProgram();
+	/* OpenGL animation code goes here */
 
 	glEnable(GL_TEXTURE_2D);
 	glShadeModel(GL_SMOOTH);		 // Enables Smooth Shading
@@ -23,28 +23,37 @@ void drawHandle(HDC hDC, meshLoader* scene, std::map<std::string, GLuint*> textu
 	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE);
 	glEnable(GL_NORMALIZE);
 	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();				// Reset MV Matrix
+	//glMatrixMode(GL_PROJECTION);
+	//glLoadIdentity();				// Reset MV Matrix
 
 	glPushMatrix();
-	glRotatef(camera->getXRot(), 1.0f, 0.0f, 0.0f);
-	glRotatef(camera->getYRot(), 0.0f, 1.0f, 0.0f);
-	glRotatef(camera->getZRot(), 0.0f, 1.0f, 1.0f);
-	glTranslated(camera->getX(), camera->getY(), camera->getZ());
-	glPushMatrix();
-	//glRotatef(theta, 1.0f, 1.0f, 1.0f);
-	//glPushMatrix();
-	glScaled(0.05, 0.05, 0.05);
-	//glTranslated(0.0, 0.0, 1.0);
-	scene->draw(textureIdMap);
+			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+			glTranslatef(position->x, position->y, position->z);
 
 
-	//glPopMatrix();
+		glPushMatrix();
+			glTranslated(position->x, position->y, position->z);
+			glRotatef(theta, viewMatrix->getUp().x, viewMatrix->getUp().y, viewMatrix->getUp().z);
+			glScaled(0.05, 0.05, 0.05);
+			scenes[0]->draw(textureIdMap);
+		glPopMatrix();
+		glPushMatrix();
+			glRotatef(theta, viewMatrix->getUp().x, viewMatrix->getUp().y, viewMatrix->getUp().z);
+			glTranslated(0.5, 0.5, 0.5);
+			glScaled(0.05, 0.05, 0.05);
+			scenes[1]->draw(textureIdMap);
+
+
+		glPopMatrix();
 	glPopMatrix();
-	glPopMatrix();
+	glMatrixMode(GL_PROJECTION);
+	glMultMatrixf(viewMatrix->getFloat());
+	//glTranslatef(0.0, 0.0, 0.01);
+	//glRotatef(theta, 0.0, 1.0, 0.0);
 	glFlush();
 	glFinish();
 
 	SwapBuffers(hDC);
-	theta++;
+	theta+=0.002;
 }
