@@ -11,10 +11,10 @@
 #include <glm/gtx/rotate_vector.hpp>
 #include "vector3d.h"
 class mat4{
-	float right[4] = {1, 0, 0, 0};
-	float up[4] = {0, 1, 0, 0};
-	float forward[4] = {0, 0, 1, 0};
-	float position[4] = {0, 0, 0, 1};
+	float right[4] = {1, 0, 0, 0};       // 1st column
+	float up[4] = {0, 1, 0, 0};          // 2nd column
+	float forward[4] = {0, 0, 1, 0};     // 3rd column
+	float position[4] = {0, 0, 0, 1};    // 4th column
 	float rightTheta = 0;
 	float upTheta = 0;
 	float matrix[16] = {

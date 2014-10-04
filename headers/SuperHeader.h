@@ -12,6 +12,7 @@
 #include <windowsx.h>
 #include "Glee.h"
 #include <gl/gl.h>
+#include <gl/glu.h>
 #include <iostream>
 #include <Math.h>
 #include <string>

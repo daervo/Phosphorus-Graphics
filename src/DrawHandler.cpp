@@ -6,7 +6,8 @@
 
 GLfloat theta;
 float matrix[16];
-void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, GLuint*> textureIdMap, mat4* viewMatrix, vector3d* position)
+mat4* proj = new mat4();
+void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, GLuint*> textureIdMap, Camera* camera, vector3d* position)
 {
 	/* OpenGL animation code goes here */
 
@@ -25,21 +26,26 @@ void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, 
 	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
 	//glMatrixMode(GL_PROJECTION);
 	//glLoadIdentity();				// Reset MV Matrix
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	//glOrtho(-0.5, 0.5, -0.5, 0.5, -0.25, 20);
+	glFrustum(-0.5, 0.5, -0.5, 0.5, 5, 100);
 
 	glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			glTranslatef(position->x, position->y, position->z);
+			gluLookAt(camera->getPosition()->x, camera->getPosition()->y, camera->getPosition()->z, camera->getForward()->z,
+					camera->getForward()->y, camera->getForward()->z, camera->getUp()->x, camera->getUp()->y, camera->getUp()->z);
 
 
 		glPushMatrix();
-			glTranslated(position->x, position->y, position->z);
-			glRotatef(theta, viewMatrix->getUp().x, viewMatrix->getUp().y, viewMatrix->getUp().z);
+			glTranslated(0.0, -0.5, -1.0);
+			//glRotatef(theta, 1.0, 0, 0);
 			glScaled(0.05, 0.05, 0.05);
+			//drawCube();
 			scenes[0]->draw(textureIdMap);
 		glPopMatrix();
 		glPushMatrix();
-			glRotatef(theta, viewMatrix->getUp().x, viewMatrix->getUp().y, viewMatrix->getUp().z);
 			glTranslated(0.5, 0.5, 0.5);
 			glScaled(0.05, 0.05, 0.05);
 			scenes[1]->draw(textureIdMap);
@@ -47,13 +53,20 @@ void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, 
 
 		glPopMatrix();
 	glPopMatrix();
-	glMatrixMode(GL_PROJECTION);
-	glMultMatrixf(viewMatrix->getFloat());
 	//glTranslatef(0.0, 0.0, 0.01);
 	//glRotatef(theta, 0.0, 1.0, 0.0);
+
 	glFlush();
 	glFinish();
 
 	SwapBuffers(hDC);
 	theta+=0.002;
+}
+
+void setOrthographicPrjoection(mat4* matrix, GLfloat r, GLfloat l, GLfloat t, GLfloat b, GLfloat f, GLfloat n)
+{
+	matrix->setRight(1/r, 0, 0);
+	matrix->setUp(0, 1/t, 0);
+	matrix->setForward(0, 0, -2/(f-n));
+	matrix->setPosition(0, 0, -(f+n)/(f-n));
 }

@@ -26,7 +26,9 @@ std::vector<meshLoader*> scenes;
 mat4* viewMatrix = new mat4();
 vector3d position(0.0, 0.0, 0.0);
 vector3d scenePosition(0.0, 0.0, 0.0);
-
+Camera* camera = new Camera();
+vector3d lookUp(1,0,0);
+vector3d lookLeft(0,1,0);
 GLfloat x = 0;
 GLfloat y = 0;
 
@@ -93,6 +95,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	//textures* tex= new textures(scene->getScene(), scene->getPath());
 	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Texture\\");
     std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
+    camera->setPosition(0.0, 0.0, 5.0);
 
     /* program main loop */
     while (!bQuit)
@@ -105,7 +108,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
             DispatchMessage(&msg);
 
         }
-        drawHandle(hDC, scenes, texMap, viewMatrix, &position);
+        drawHandle(hDC, scenes, texMap, camera, &position);
     }
 
     /* shutdown OpenGL */
@@ -118,7 +121,9 @@ int WINAPI WinMain(HINSTANCE hInstance,
 }
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	float velocity = 0.1;
+	float velocity = 0.5;
+	vector3d newPosition;
+	//GLfloat newForward;
     switch (uMsg)
     {
         case WM_DESTROY:
@@ -131,33 +136,63 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
                 case VK_ESCAPE:
                     bQuit = GL_TRUE;
                 break;
-                case VK_UP:
-                	viewMatrix->lookUp(velocity);
-                	//viewMatrix->addForward(0.0, 0.001, 0.0);
+                case VK_UP://move towards lookat
+                	cout<<"current position is "<<camera->getPosition()->x <<" "<<camera->getPosition()->y <<" " << camera->getPosition()->z<<endl;
+                	newPosition = ((*camera->getPosition()) - (*camera->getForward()));
+                	newPosition.normalize();
+                	cout<<"normalized is "<<newPosition.x <<" "<<newPosition.y <<" " << newPosition.z<<endl;
+                	camera->setPosition(camera->getPosition()->x - (velocity*newPosition.x),
+                			camera->getPosition()->y - (velocity*newPosition.y),
+                			camera->getPosition()->z - (velocity*newPosition.z));
+                	cout<<"new position is "<<camera->getPosition()->x <<" "<<camera->getPosition()->y <<" " << camera->getPosition()->z<<endl;
                 break;
-                case VK_DOWN:
-                	viewMatrix->lookUp(-velocity);
-                	//viewMatrix->addForward(0.0, -0.001, 0.0);
+                case VK_DOWN://move away from lookat
+                	cout<<"current position is "<<camera->getPosition()->x <<" "<<camera->getPosition()->y <<" " << camera->getPosition()->z<<endl;
+                	                	newPosition = ((*camera->getPosition()) - (*camera->getForward()));
+                	                	newPosition.normalize();
+                	                	cout<<"normalized is "<<newPosition.x <<" "<<newPosition.y <<" " << newPosition.z<<endl;
+                	                	camera->setPosition(camera->getPosition()->x + (velocity*newPosition.x),
+                	                			camera->getPosition()->y + (velocity*newPosition.y),
+                	                			camera->getPosition()->z + (velocity*newPosition.z));
+                	                	cout<<"new position is "<<camera->getPosition()->x <<" "<<camera->getPosition()->y <<" " << camera->getPosition()->z<<endl;
                 break;
                 case VK_RIGHT:
-                	viewMatrix->turnRight(velocity);
+                	//viewMatrix->turnRight(velocity);
                 	//viewMatrix->addForward(0.1, 0.0, 0.0);
                 break;
                 case VK_LEFT:
-                	viewMatrix->turnRight(-velocity);
+                	//viewMatrix->turnRight(-velocity);
                 	//viewMatrix->addForward(-0.1, 0.0, 0.0);
                 break;
                 case VK_NUMPAD8:
-                	position.changeZ(position.z+=velocity);
+                	cout<<"current look at is x:"<<camera->getForward()->x
+                	<<" y:"<<camera->getForward()->y <<" z:" << camera->getForward()->z<<endl;
+                	lookUp.x-=velocity;
+                	camera->anglesToAxes(lookUp);
+                	cout<<"look at is now x:"<<camera->getForward()->x
+                	<<" y:"<<camera->getForward()->y <<" z:" << camera->getForward()->z<<endl;
+                	cout<<"new position is "<<camera->getPosition()->x <<" "<<camera->getPosition()->y <<" " << camera->getPosition()->z<<endl;
+                	cout<<"new up is "<<camera->getUp()->x <<" "<<camera->getUp()->y <<" " << camera->getUp()->z<<endl;
+
+                	cout<<"new right is "<<camera->getLeft()->x <<" "<<camera->getLeft()->y <<" " << camera->getLeft()->z<<endl;
                 break;
                 case VK_NUMPAD5:
-                	position.changeZ(position.z-=velocity);
+                	lookUp.z-=velocity;
+                	camera->anglesToAxes(lookUp);
+                	cout<<"current look at is  x:"<<camera->getForward()->x
+                	<<" y:"<<camera->getForward()->y <<" z:" << camera->getForward()->z<<endl;
                 break;
                 case VK_NUMPAD4:
-                	position.changeX(position.x+=velocity);
+                	lookLeft.y += velocity;
+                	camera->anglesToAxes(lookLeft);
+                	cout<<"current look at is  x:"<<camera->getForward()->x
+                	<<" y:"<<camera->getForward()->y <<" z:" << camera->getForward()->z<<endl;
                 break;
                 case VK_NUMPAD6:
-                	position.changeX(position.x-=velocity);
+                	lookLeft.y -= velocity;
+                	camera->anglesToAxes(lookLeft);
+                	cout<<"current look at is  x:"<<camera->getForward()->x
+                	<<" y:"<<camera->getForward()->y <<" z:" << camera->getForward()->z<<endl;
                 break;
                 case VK_SPACE:
                 	glm::vec2 mousePos(++x, ++y);
