@@ -7,7 +7,7 @@
 GLfloat theta;
 float matrix[16];
 mat4* proj = new mat4();
-void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, GLuint*> textureIdMap, Camera* camera, vector3d* position)
+void drawHandle(HDC hDC, const std::vector<meshLoader*>& scenes, std::map<std::string, GLuint*> textureIdMap, Camera* camera, vector3d* position)
 {
 	/* OpenGL animation code goes here */
 
@@ -34,8 +34,8 @@ void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, 
 	glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			gluLookAt(camera->getPosition()->x, camera->getPosition()->y, camera->getPosition()->z, camera->getForward()->z,
-					camera->getForward()->y, camera->getForward()->z, camera->getUp()->x, camera->getUp()->y, camera->getUp()->z);
+			gluLookAt(camera->getPosition().x, camera->getPosition().y, camera->getPosition().z, camera->getForward().x,
+					camera->getForward().y, camera->getForward().z, camera->getUp().x, camera->getUp().y, camera->getUp().z);
 
 
 		glPushMatrix();
@@ -47,6 +47,34 @@ void drawHandle(HDC hDC, std::vector<meshLoader*> scenes, std::map<std::string, 
 		glPopMatrix();
 		glPushMatrix();
 			glTranslated(0.5, 0.5, 0.5);
+			glScaled(0.05, 0.05, 0.05);
+			scenes[1]->draw(textureIdMap);
+
+
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(-0.5, -0.5, -0.5);
+			glScaled(0.05, 0.05, 0.05);
+			scenes[1]->draw(textureIdMap);
+
+
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(-0.5, 0.5, 0.5);
+			glScaled(0.05, 0.05, 0.05);
+			scenes[1]->draw(textureIdMap);
+
+
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(0.5, -0.5, 0.5);
+			glScaled(0.05, 0.05, 0.05);
+			scenes[1]->draw(textureIdMap);
+
+
+		glPopMatrix();
+		glPushMatrix();
+			glTranslated(0.5, 0.5, -0.5);
 			glScaled(0.05, 0.05, 0.05);
 			scenes[1]->draw(textureIdMap);
 
