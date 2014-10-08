@@ -2,17 +2,16 @@
 #define DRAW_H_INCLUDED
 
 #include "SuperHeader.h"
-#include "Triangle.h"
 #include "meshLoader.h"
 #include "camera.h"
-#include "mat4.h"
-#include "vector3d.h"
 
-void drawHandle(HDC hDC, const std::vector<meshLoader*>& scenes, std::map<std::string, GLuint*> textureIdMap, Camera* camera, vector3d* position);
-void setOrthographicPrjoection(mat4* matrix, GLfloat r, GLfloat l, GLfloat t, GLfloat b, GLfloat f, GLfloat n);
-void draw();
+/**
+ *Draws the meshes
+ *@param hDC HDC
+ *@param scene a collection of meshes
+ *@param textureIdMap information about the textures
+ *@param camera camera object
+ */
+void drawHandle(HDC hDC, const std::vector<meshLoader*>& scenes, std::map<std::string, GLuint*> textureIdMap, Camera* camera);
 
-void drawTriangle(Triangle *triangle);
-void drawSquare();
-void drawCube();
 #endif // DRAW_H_INCLUDED

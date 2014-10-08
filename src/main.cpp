@@ -5,8 +5,6 @@
 #include "../headers/meshLoader.h"
 #include "../headers/Textures.h"
 #include "../headers/camera.h"
-#include "../headers/mat4.h"
-#include "../headers/vector3d.h"
 #include <glm/glm.hpp>
 #include <fstream>
 
@@ -24,17 +22,9 @@ GLboolean debugMode = GL_FALSE;
 GLboolean bQuit = GL_FALSE;
 
 std::vector<meshLoader*> scenes;
-mat4* viewMatrix = new mat4();
-vector3d position(0.0, 0.0, 0.0);
-vector3d scenePosition(0.0, 0.0, 0.0);
 Camera camera = Camera();
-glm::vec3 lookUp(1,0,0);
-vector3d lookDown(-1,0,0);
-vector3d lookLeft(0,1,0);
-vector3d lookRight(0,-1,0);
 GLfloat x = 0;
 GLfloat y = 0;
-Camera testcam;
 
 int WINAPI WinMain(HINSTANCE hInstance,
 		HINSTANCE hPrevInstance,
@@ -95,15 +85,12 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	/* enable OpenGL for the window */
 	EnableOpenGL(hwnd, &hDC, &hRC);
 	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS"));
-	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS"));
-	//textures* tex= new textures(scene->getScene(), scene->getPath());
-	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Texture\\");
-	std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
+	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Zaralok.obj"));
+	textures* tex= new textures(scenes[1]->getScene(), scenes[1]->getPath());
+	tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
+	std::map<std::string, GLuint*> texMap = tex->getTextureIdMap();
 	camera.setPosition(0.0, 0.0, 5.0);
 	camera.setLookAt(0.0, 0.0, -1.0);
-	testcam = Camera();
-	testcam.setPosition(0.0, 0.0, 1.0);
-	testcam.setLookAt(0.0, 0.0, 0.0);
 
 	/* program main loop */
 	while (!bQuit)
@@ -116,7 +103,7 @@ int WINAPI WinMain(HINSTANCE hInstance,
 			DispatchMessage(&msg);
 
 		}
-		drawHandle(hDC, scenes, texMap, &camera, &position);
+		drawHandle(hDC, scenes, texMap, &camera);
 	}
 
 	/* shutdown OpenGL */
@@ -169,13 +156,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			camera.turn (-1.0, 0.0, velocity);
 			break;
 		case VK_SPACE:
-			cout<<"current look at is x:"<<testcam.getLookAt().x
-			<<" y:"<<testcam.getLookAt().y <<" z:" << testcam.getLookAt().z<<endl;
-			trans = -glm::translate(testcam.getPosition())*glm::vec4(testcam.getLookAt(), 1);
-			testcam.setLookAt(glm::vec3(trans));
-			cout<<"look at is now x:"<<testcam.getLookAt().x
-					<<" y:"<<testcam.getLookAt().y <<" z:" << testcam.getLookAt().z<<endl;
-			testcam.print();
 			break;
 		case 87:
 			camera.moveForward(velocity);

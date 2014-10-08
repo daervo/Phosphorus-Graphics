@@ -1,0 +1,64 @@
+\hypertarget{classtextures}{\section{textures Class Reference}
+\label{classtextures}\index{textures@{textures}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classtextures_a714c8f638d06ad80f874daf1b96f9d3d}{textures} (const ai\+Scene $\ast$scene, std\+::string path)
+\item 
+bool \hyperlink{classtextures_a111f104c11e94d47298857eb44835f26}{bind\+Textures} (char $\ast$const basepath)
+\item 
+std\+::map$<$ std\+::string, G\+Luint $\ast$ $>$ \hyperlink{classtextures_a0108d6536b20f63b8773fe0ca0da6409}{get\+Texture\+Id\+Map} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classtextures_a714c8f638d06ad80f874daf1b96f9d3d}{\index{textures@{textures}!textures@{textures}}
+\index{textures@{textures}!textures@{textures}}
+\subsubsection[{textures}]{\setlength{\rightskip}{0pt plus 5cm}textures\+::textures (
+\begin{DoxyParamCaption}
+\item[{const ai\+Scene $\ast$}]{scene, }
+\item[{std\+::string}]{path}
+\end{DoxyParamCaption}
+)}}\label{classtextures_a714c8f638d06ad80f874daf1b96f9d3d}
+constructs texture data from scene and path 
+\begin{DoxyParams}{Parameters}
+{\em scene} & scene object \\
+\hline
+{\em path} & path to the model \\
+\hline
+\end{DoxyParams}
+wrong Dev\+I\+L version /// 
+
+\subsection{Member Function Documentation}
+\hypertarget{classtextures_a111f104c11e94d47298857eb44835f26}{\index{textures@{textures}!bind\+Textures@{bind\+Textures}}
+\index{bind\+Textures@{bind\+Textures}!textures@{textures}}
+\subsubsection[{bind\+Textures}]{\setlength{\rightskip}{0pt plus 5cm}bool textures\+::bind\+Textures (
+\begin{DoxyParamCaption}
+\item[{char $\ast$const}]{basepath}
+\end{DoxyParamCaption}
+)}}\label{classtextures_a111f104c11e94d47298857eb44835f26}
+populates the texture\+Id\+Map from the texture images. Note\+: only currently works with single image textures 
+\begin{DoxyParams}{Parameters}
+{\em basepath} & the base path of the texture images \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+true if successful 
+\end{DoxyReturn}
+\hypertarget{classtextures_a0108d6536b20f63b8773fe0ca0da6409}{\index{textures@{textures}!get\+Texture\+Id\+Map@{get\+Texture\+Id\+Map}}
+\index{get\+Texture\+Id\+Map@{get\+Texture\+Id\+Map}!textures@{textures}}
+\subsubsection[{get\+Texture\+Id\+Map}]{\setlength{\rightskip}{0pt plus 5cm}std\+::map$<$std\+::string, G\+Luint$\ast$$>$ textures\+::get\+Texture\+Id\+Map (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classtextures_a0108d6536b20f63b8773fe0ca0da6409}
+returns the texture\+Id\+Map. Warning\+: call bind\+Textures first. \begin{DoxyReturn}{Returns}
+texture\+Id\+Map 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+headers/Textures.\+h\item 
+src/Textures.\+cpp\end{DoxyCompactItemize}

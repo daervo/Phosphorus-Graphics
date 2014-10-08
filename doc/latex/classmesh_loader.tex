@@ -1,0 +1,82 @@
+\hypertarget{classmesh_loader}{\section{mesh\+Loader Class Reference}
+\label{classmesh_loader}\index{mesh\+Loader@{mesh\+Loader}}
+}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classmesh_loader_a3f4c3fd51e10fd995c399e95f2bbad45}{mesh\+Loader} (std\+::string filename)
+\item 
+void \hyperlink{classmesh_loader_a221d9f7144f69b96c8f8281a81006783}{draw} (std\+::map$<$ std\+::string, G\+Luint $\ast$ $>$ texture\+Id\+Map)
+\item 
+std\+::vector$<$ \hyperlink{classmesh}{mesh} $\ast$ $>$ \& \hyperlink{classmesh_loader_a86644266b3b6b5dec96e6ab699924dba}{get\+Meshes} ()
+\item 
+const ai\+Scene $\ast$ \hyperlink{classmesh_loader_a40d29590886d593b9df8c01c5f6a32bc}{get\+Scene} ()
+\item 
+std\+::string \hyperlink{classmesh_loader_a172a380d19aab1189c1affd299f2db39}{get\+Path} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classmesh_loader_a3f4c3fd51e10fd995c399e95f2bbad45}{\index{mesh\+Loader@{mesh\+Loader}!mesh\+Loader@{mesh\+Loader}}
+\index{mesh\+Loader@{mesh\+Loader}!mesh\+Loader@{mesh\+Loader}}
+\subsubsection[{mesh\+Loader}]{\setlength{\rightskip}{0pt plus 5cm}mesh\+Loader\+::mesh\+Loader (
+\begin{DoxyParamCaption}
+\item[{std\+::string}]{filename}
+\end{DoxyParamCaption}
+)}}\label{classmesh_loader_a3f4c3fd51e10fd995c399e95f2bbad45}
+loads the scene from a file 
+\begin{DoxyParams}{Parameters}
+{\em filename} & path to the file \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classmesh_loader_a221d9f7144f69b96c8f8281a81006783}{\index{mesh\+Loader@{mesh\+Loader}!draw@{draw}}
+\index{draw@{draw}!mesh\+Loader@{mesh\+Loader}}
+\subsubsection[{draw}]{\setlength{\rightskip}{0pt plus 5cm}void mesh\+Loader\+::draw (
+\begin{DoxyParamCaption}
+\item[{std\+::map$<$ std\+::string, G\+Luint $\ast$ $>$}]{texture\+Id\+Map}
+\end{DoxyParamCaption}
+)}}\label{classmesh_loader_a221d9f7144f69b96c8f8281a81006783}
+draws each mesh recursively 
+\begin{DoxyParams}{Parameters}
+{\em texture\+Id\+Map} & texture map \\
+\hline
+\end{DoxyParams}
+\hypertarget{classmesh_loader_a86644266b3b6b5dec96e6ab699924dba}{\index{mesh\+Loader@{mesh\+Loader}!get\+Meshes@{get\+Meshes}}
+\index{get\+Meshes@{get\+Meshes}!mesh\+Loader@{mesh\+Loader}}
+\subsubsection[{get\+Meshes}]{\setlength{\rightskip}{0pt plus 5cm}std\+::vector$<$ {\bf mesh} $\ast$ $>$ \& mesh\+Loader\+::get\+Meshes (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classmesh_loader_a86644266b3b6b5dec96e6ab699924dba}
+returns the meshes \begin{DoxyReturn}{Returns}
+vector of meshes 
+\end{DoxyReturn}
+\hypertarget{classmesh_loader_a172a380d19aab1189c1affd299f2db39}{\index{mesh\+Loader@{mesh\+Loader}!get\+Path@{get\+Path}}
+\index{get\+Path@{get\+Path}!mesh\+Loader@{mesh\+Loader}}
+\subsubsection[{get\+Path}]{\setlength{\rightskip}{0pt plus 5cm}std\+::string mesh\+Loader\+::get\+Path (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [inline]}}}\label{classmesh_loader_a172a380d19aab1189c1affd299f2db39}
+returns path of the scene \begin{DoxyReturn}{Returns}
+path 
+\end{DoxyReturn}
+\hypertarget{classmesh_loader_a40d29590886d593b9df8c01c5f6a32bc}{\index{mesh\+Loader@{mesh\+Loader}!get\+Scene@{get\+Scene}}
+\index{get\+Scene@{get\+Scene}!mesh\+Loader@{mesh\+Loader}}
+\subsubsection[{get\+Scene}]{\setlength{\rightskip}{0pt plus 5cm}const ai\+Scene $\ast$ mesh\+Loader\+::get\+Scene (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classmesh_loader_a40d29590886d593b9df8c01c5f6a32bc}
+returns while scene \begin{DoxyReturn}{Returns}
+scene 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+headers/mesh\+Loader.\+h\item 
+src/mesh\+Loader.\+cpp\end{DoxyCompactItemize}

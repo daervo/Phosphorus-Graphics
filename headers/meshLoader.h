@@ -14,32 +14,46 @@
 #include <glm/glm.hpp>
 
 class meshLoader{
+	const aiScene* mScene;
+	std::string path;
+	std::map<std::string, GLuint*> textureIdMap;
 	std::vector<mesh*> meshes;
+private:
 	void recursiveProcess(const aiScene* sc, aiNode* nd,  float scale);
 	void apply_material(const struct aiMaterial *mtl);
 	unsigned int loadTexture(const char* filename);
 	void color4_to_float4(aiColor4D *c, float f[4]);
 	void set_float4(float f[4], float a, float b, float c, float d);
 	void Color4f(const aiColor4D *color);
-	const aiScene* mScene;
-	std::string path;
-	std::map<std::string, GLuint*> textureIdMap;
-	public:
-		meshLoader(std::string filename);
-		~meshLoader();
-		void draw(std::map<std::string, GLuint*> textureIdMap);
-		std::vector<mesh*>& getMeshes();
-		const aiScene* getScene();
-
-		std::string getPath(){
-			return path;
-		}
-		void setTextureIdMap(std::map<std::string, GLuint*> textureIdMap){
-			this->textureIdMap = textureIdMap;
-			if (textureIdMap.empty()){
-				cout<<"texturemap is empty"<<endl;
-			}
-		}
+public:
+	/**
+	 * loads the scene from a file
+	 * @param filename path to the file
+	 */
+	meshLoader(std::string filename);
+	~meshLoader();
+	/**
+	 * draws each mesh recursively
+	 * @param textureIdMap texture map
+	 */
+	void draw(std::map<std::string, GLuint*> textureIdMap);
+	/**
+	 * returns the meshes
+	 * @return vector of meshes
+	 */
+	std::vector<mesh*>& getMeshes();
+	/**
+	 * returns while scene
+	 * @return scene
+	 */
+	const aiScene* getScene();
+	/**
+	 * returns path of the scene
+	 * @return path
+	 */
+	std::string getPath(){
+		return path;
+	}
 };
 
 

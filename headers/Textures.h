@@ -18,10 +18,26 @@ class textures{
 	int numTextures;
 	ILuint* imageIds = NULL;
 public:
+	/**
+	 * constructs texture data from scene and path
+	 * @param scene scene object
+	 * @param path path to the model
+	 */
 	textures(const aiScene *scene, std::string path);
 	~textures();
+	/**
+	 * populates the textureIdMap from the texture images.
+	 * Note: only currently works with single image textures
+	 * @param basepath the base path of the texture images
+	 * @return true if successful
+	 */
 	bool bindTextures(char* const basepath);
 
+	/**
+	 * returns the textureIdMap.
+	 * Warning: call bindTextures first.
+	 * @return textureIdMap
+	 */
 	std::map<std::string, GLuint*> getTextureIdMap(){
 		if (textureIdMap.empty()){
 			cout<< "warning: map is empty, texture format may be unsupported"<<endl;
