@@ -34,8 +34,8 @@ void drawHandle(HDC hDC, const std::vector<meshLoader*>& scenes, std::map<std::s
 	glPushMatrix();
 			glMatrixMode(GL_MODELVIEW);
 			glLoadIdentity();
-			gluLookAt(camera->getPosition().x, camera->getPosition().y, camera->getPosition().z, camera->getForward().x,
-					camera->getForward().y, camera->getForward().z, camera->getUp().x, camera->getUp().y, camera->getUp().z);
+			gluLookAt(camera->getPosition().x, camera->getPosition().y, camera->getPosition().z, camera->getLookAt().x,
+					camera->getLookAt().y, camera->getLookAt().z, camera->getUp().x, camera->getUp().y, camera->getUp().z);
 
 
 		glPushMatrix();

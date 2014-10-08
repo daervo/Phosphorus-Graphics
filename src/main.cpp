@@ -8,7 +8,6 @@
 #include "../headers/mat4.h"
 #include "../headers/vector3d.h"
 #include <glm/glm.hpp>
-#include <glm/gtx/rotate_vector.hpp>
 #include <fstream>
 
 LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
@@ -101,14 +100,10 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Texture\\");
 	std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
 	camera.setPosition(0.0, 0.0, 5.0);
-	camera.setUp(0.0, 1.0, 0.0);
-	camera.setForward(0.0, 0.0, -1.0);
-	camera.setLeft(1.0, 0.0, 0.0);
+	camera.setLookAt(0.0, 0.0, -1.0);
 	testcam = Camera();
 	testcam.setPosition(0.0, 0.0, 1.0);
-	testcam.setUp(0.0, 1.0, 0.0);
-	testcam.setForward(0.0, 0.0, 0.0);
-	testcam.setLeft(1.0, 0.0, 0.0);
+	testcam.setLookAt(0.0, 0.0, 0.0);
 
 	/* program main loop */
 	while (!bQuit)
@@ -152,83 +147,50 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			bQuit = GL_TRUE;
 			break;
 		case VK_UP://move towards lookat
-			newPosition = camera.getPosition() - camera.getForward();
-			glm::normalize(&newPosition);
-			camera.setPosition(camera.getPosition().x - (velocity*newPosition.x),
-					camera.getPosition().y - (velocity*newPosition.y),
-					camera.getPosition().z - (velocity*newPosition.z));
+			camera.zoom(velocity);
 			break;
 		case VK_DOWN://move away from lookat
-			newPosition = camera.getPosition() - camera.getForward();
-			glm::normalize(&newPosition);
-			camera.setPosition(camera.getPosition().x + (velocity*newPosition.x),
-					camera.getPosition().y + (velocity*newPosition.y),
-					camera.getPosition().z + (velocity*newPosition.z));
+			camera.zoom(-velocity);
 			break;
 		case VK_RIGHT:
-			//viewMatrix->turnRight(velocity);
-			//viewMatrix->addForward(0.1, 0.0, 0.0);
 			break;
 		case VK_LEFT:
-			//viewMatrix->turnRight(-velocity);
-			//viewMatrix->addForward(-0.1, 0.0, 0.0);
 			break;
 		case VK_NUMPAD8:
-			//camera.print();
-			//camera.anglesToAxes(lookUp);
-			//rotated = glm::vec3(glm::rotate(camera.getForward(), 1.0f, camera.getLeft()));
-			//camera.setForward((glm::mat3)glm::translate(-camera.getPosition())*camera.getForward());
-			//camera.setLeft((glm::mat3)glm::translate(-camera.getPosition())*camera.getLeft());
-			//camera.print();
-			//camera.setForward(glm::rotate(camera.getForward(), 1.0f, camera.getLeft()));
-			//camera.setForward((glm::mat3)glm::translate(camera.getPosition())*camera.getForward());
-			//camera.setForward(glm::mat3(glm::rotate(0.5f, camera.getLeft()))*camera.getForward());
-			//camera.setLeft((glm::mat3)glm::translate(camera.getPosition())*camera.getLeft());
-
-			trans = -glm::translate(camera.getPosition())*glm::vec4(camera.getForward(), 1);
-			camera.setForward(glm::vec3(trans));
-			cout<<"current look at is x:"<<camera.getForward().x
-			<<" y:"<<camera.getForward().y <<" z:" << camera.getForward().z<<endl;
-			newForward = glm::mat3(glm::rotate(0.5f, camera.getLeft()))*camera.getForward();
-			camera.setForward(newForward);
-			cout<<"look at is now x:"<<camera.getForward().x
-			<<" y:"<<camera.getForward().y <<" z:" << camera.getForward().z<<endl;
-			trans = -glm::translate(camera.getPosition())*glm::vec4(camera.getForward(), 1);
-			camera.setForward(glm::vec3(trans));
-			camera.print();
-
+			camera.turn (0.0, 1.0, velocity);
 			break;
 		case VK_NUMPAD5:
-			cout<<"current look at is x:"<<camera.getForward().x
-			<<" y:"<<camera.getForward().y <<" z:" << camera.getForward().z<<endl;
-			camera.anglesToAxes(lookUp);
-			cout<<"look at is now x:"<<camera.getForward().x
-					<<" y:"<<camera.getForward().y <<" z:" << camera.getForward().z<<endl;
+			camera.turn (0.0, -1.0, velocity);
 			break;
 		case VK_NUMPAD4:
-			//camera.anglesToAxes(lookLeft);
-			lookUp.x = camera.getForward().x + velocity;
-			lookUp.y = camera.getForward().y;
-			lookUp.z = camera.getForward().z;
-			glm::normalize(&lookUp);
-			//camera.lookAtToAxes(lookUp);
+			camera.turn (1.0, 0.0, velocity);
 			break;
 		case VK_NUMPAD6:
-			//camera.anglesToAxes(lookRight);
-			lookUp.x = camera.getForward().x - velocity;
-			lookUp.y = camera.getForward().y;
-			lookUp.z = camera.getForward().z;
-			glm::normalize(&lookUp);
-			//camera.lookAtToAxes(lookUp);
+			camera.turn (-1.0, 0.0, velocity);
 			break;
 		case VK_SPACE:
-			cout<<"current look at is x:"<<testcam.getForward().x
-			<<" y:"<<testcam.getForward().y <<" z:" << testcam.getForward().z<<endl;
-			trans = -glm::translate(testcam.getPosition())*glm::vec4(testcam.getForward(), 1);
-			testcam.setForward(glm::vec3(trans));
-			cout<<"look at is now x:"<<testcam.getForward().x
-			<<" y:"<<testcam.getForward().y <<" z:" << testcam.getForward().z<<endl;
+			cout<<"current look at is x:"<<testcam.getLookAt().x
+			<<" y:"<<testcam.getLookAt().y <<" z:" << testcam.getLookAt().z<<endl;
+			trans = -glm::translate(testcam.getPosition())*glm::vec4(testcam.getLookAt(), 1);
+			testcam.setLookAt(glm::vec3(trans));
+			cout<<"look at is now x:"<<testcam.getLookAt().x
+					<<" y:"<<testcam.getLookAt().y <<" z:" << testcam.getLookAt().z<<endl;
 			testcam.print();
+			break;
+		case 87:
+			camera.moveForward(velocity);
+			break;
+		case 83:
+			camera.moveForward(-velocity);
+			break;
+		case 65:
+			camera.moveRight(-velocity);
+			break;
+		case 68:
+			camera.moveRight(velocity);
+			break;
+		default:
+			cout<<wParam<<endl;
 			break;
 		}
 	}
