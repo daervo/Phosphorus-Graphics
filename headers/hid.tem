@@ -1,0 +1,120 @@
+namespace phosphorus
+{
+    template <typename T>
+    bool human_interface_device::on_key_press(const int key, const T& action)
+    {
+        if (key_pressed[key + 1] == state::press)
+        {
+            return on_key_down(key, action);
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_key_release(const int key, const T& action)
+    {
+        if (key_pressed[key + 1] == state::release)
+        {
+            return on_key_up(key, action);
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_key_down(const int key, const T& action)
+    {
+        if (glfwGetKey(window, key) == GLFW_PRESS && key_pressed[key + 1] >= state::press)
+        {
+            key_pressed[key + 1] = state::down;
+            action();
+            return true;
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_key_up(const int key, const T& action)
+    {
+        if (glfwGetKey(window, key) == GLFW_RELEASE)
+        {
+            key_pressed[key + 1] = state::up;
+            action();
+            return true;
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_mouse_press(const mouse_button button, const T& action)
+    {
+        if (mouse_pressed[button] == state::press)
+        {
+            return mouse_down(button, action);
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_mouse_release(const mouse_button button, const T& action)
+    {
+        if (mouse_pressed[button] == state::release)
+        {
+            return mouse_up(button, action);
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_mouse_down(const mouse_button button, const T& action)
+    {
+        if (glfwGetMouseButton(window, button) == GLFW_PRESS)
+        {
+            mouse_pressed[button] = state::down;
+            action();
+            return true;
+        }
+        
+        return false;
+    }
+
+    template <typename T>
+    bool human_interface_device::on_mouse_up(const mouse_button button, const T& action)
+    {
+        if (glfwGetMouseButton(window, button) == GLFW_RELEASE)
+        {
+            mouse_pressed[button] = state::up;
+            action();
+            return true;
+        }
+
+        return false;
+    }
+    
+    template <typename T>
+    bool human_interface_device::is_cursor_at_coordinates(const T& coords) { return coords(cursor_position.first, cursor_position.second); }
+
+    template <typename T, typename U>
+    bool human_interface_device::on_cursor_at_coordinates(const T& coords, const U& action)
+    {
+        if (coords(cursor_position.first, cursor_position.second))
+        {
+            action();
+            return true;
+        }
+        
+        return false;
+    }
+    
+    const std::pair<double, double>& human_interface_device::get_cursor_position() { return cursor_position; }
+    bool human_interface_device::is_key_down(const int key)               { return key_pressed[key + 1] == state::down;   }
+    bool human_interface_device::is_key_is_up(const int key)              { return key_pressed[key + 1] == state::up;     }
+    
+    bool human_interface_device::is_key_down(const mouse_button key)         { return mouse_pressed[key] == state::down; }
+    bool human_interface_device::is_key_is_up(const mouse_button key)        { return mouse_pressed[key] == state::up;   }
+}

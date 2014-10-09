@@ -42,12 +42,12 @@ void drawHandle(HDC hDC, const std::vector<meshLoader*>& scenes, std::map<std::s
 			//glRotatef(theta, 1.0, 0, 0);
 			glScaled(0.05, 0.05, 0.05);
 			//drawCube();
-			scenes[1]->draw(textureIdMap);
+			scenes[0]->draw(textureIdMap);
 		glPopMatrix();
 		glPushMatrix();
 			glTranslated(0.5, 0.5, 0.5);
 			glScaled(0.1, 0.1, 0.1);
-			scenes[1]->draw(textureIdMap);
+			scenes[2]->draw(textureIdMap);
 
 
 		glPopMatrix();
@@ -61,7 +61,7 @@ void drawHandle(HDC hDC, const std::vector<meshLoader*>& scenes, std::map<std::s
 		glPushMatrix();
 			glTranslated(-0.5, 0.5, 0.5);
 			glScaled(0.05, 0.05, 0.05);
-			scenes[1]->draw(textureIdMap);
+			scenes[3]->draw(textureIdMap);
 
 
 		glPopMatrix();

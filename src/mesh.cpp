@@ -51,7 +51,7 @@ void mesh::apply_material(const struct aiMaterial *mtl, std::map<std::string, GL
 	aiColor4D ambient;
 	aiColor4D emission;
 	float shininess, strength;
-	int two_sided;
+	//int two_sided;
 	int wireframe;
 	unsigned int max;
 

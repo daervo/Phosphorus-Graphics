@@ -23,7 +23,7 @@ public:
 	 * @param scene scene object
 	 * @param path path to the model
 	 */
-	textures(const aiScene *scene, std::string path);
+	textures(const aiScene *scene);
 	~textures();
 	/**
 	 * populates the textureIdMap from the texture images.

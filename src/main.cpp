@@ -5,6 +5,7 @@
 #include "../headers/meshLoader.h"
 #include "../headers/Textures.h"
 #include "../headers/camera.h"
+#include "../headers/hid.hpp"
 #include <glm/glm.hpp>
 #include <fstream>
 
@@ -27,8 +28,8 @@ GLfloat x = 0;
 GLfloat y = 0;
 
 int WINAPI WinMain(HINSTANCE hInstance,
-		HINSTANCE hPrevInstance,
-		LPSTR lpCmdLine,
+		HINSTANCE ,
+		LPSTR ,
 		int nCmdShow)
 {
 	WNDCLASSEX wcex;
@@ -36,16 +37,6 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	HDC hDC;
 	HGLRC hRC;
 	MSG msg;
-
-	/*string in = "";
-    cout << "Run in normal mode? 'N' for debug mode..." << endl;
-    cin >> in;
-    if (in == "N"){
-    	debugMode = GL_TRUE;
-    }else{
-    	cout << "Normal Mode" << endl;
-    }*/
-
 	/* register window class */
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.style = CS_OWNDC;
@@ -85,13 +76,16 @@ int WINAPI WinMain(HINSTANCE hInstance,
 	/* enable OpenGL for the window */
 	EnableOpenGL(hwnd, &hDC, &hRC);
 	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS"));
-	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Zaralok.obj"));
-	textures* tex= new textures(scenes[1]->getScene(), scenes[1]->getPath());
-	tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
-	std::map<std::string, GLuint*> texMap = tex->getTextureIdMap();
+	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Sirus5 Colonial City\\sirus city.obj"));
+	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Mustang gt500kr\\mustang_gt500kr.3ds"));
+	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Volkswagen Touareg 2\\model\\Touareg.3DS"));
+	//textures* tex= new textures(scenes[1]->getScene(), scenes[1]->getPath());
+	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
+	std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
 	camera.setPosition(0.0, 0.0, 5.0);
 	camera.setLookAt(0.0, 0.0, -1.0);
 
+	phosphorus::human_interface_device(hwnd, GLFW_STICKY_KEYS, GL_TRUE);
 	/* program main loop */
 	while (!bQuit)
 	{

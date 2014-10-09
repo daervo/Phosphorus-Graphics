@@ -102,19 +102,19 @@ void meshLoader::apply_material(const struct aiMaterial *mtl)
 	aiColor4D ambient;
 	aiColor4D emission;
 	float shininess, strength;
-	int two_sided;
+	//int two_sided;
 	int wireframe;
 	unsigned int max;
 
 	int texIndex = 0;
-	aiString texPath;
+	aiString* texPath = NULL;
 
 	if (!textureIdMap.empty()){
-		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
+		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, texPath))
 		{
 			//bind texture
-			if (&texPath != NULL){
-				unsigned int texId = *textureIdMap[texPath.data];
+			if (texPath != NULL){
+				unsigned int texId = *textureIdMap[texPath->data];
 				glBindTexture(GL_TEXTURE_2D, texId);
 			}
 		}else{

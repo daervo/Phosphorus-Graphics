@@ -7,6 +7,7 @@
 
 #ifndef CAMERA_H_
 #define CAMERA_H_
+#define GLM_FORCE_RADIANS
 #include "SuperHeader.h"
 #include <glm/glm.hpp>
 #include <glm/gtx/rotate_vector.hpp>
@@ -146,7 +147,7 @@ public:
 	 */
 	void zoom(float units){
 		glm::vec3 newPosition = position - lookAt;
-		glm::normalize(&newPosition);
+		newPosition = glm::normalize(newPosition);
 		setPosition(position.x + (units*newPosition.x),
 				position.y + (units*newPosition.y),
 				position.z + (units*newPosition.z));
@@ -157,7 +158,7 @@ public:
 	 */
 	void moveForward(float units){
 		glm::vec3 newPosition = position - lookAt;
-		glm::normalize(&newPosition);
+		newPosition = glm::normalize(newPosition);
 
 		//move both position and lookAt
 		setPosition(position.x - (units*newPosition.x),
@@ -185,7 +186,6 @@ public:
 
 		//Translate back
 		translatePosition();
-		print(lookAt);
 
 		//move both position and lookAt
 		setLookAt(glm::vec3(transMat*glm::vec4(lookAt, 1)));
