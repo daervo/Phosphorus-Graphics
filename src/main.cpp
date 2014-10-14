@@ -1,193 +1,84 @@
-#include "../headers/SuperHeader.h"
-#include "../headers/Enable.h"
-#include "../headers/Draw.h"
-#include "../headers/Disable.h"
-#include "../headers/meshLoader.h"
-#include "../headers/Textures.h"
+#include <GLFW/glfw3.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include "../headers/camera.h"
-#include "../headers/hid.hpp"
-#include <glm/glm.hpp>
-#include <fstream>
-
-LRESULT CALLBACK WindowProc(HWND, UINT, WPARAM, LPARAM);
-void setScreenSize();
-
-GLuint WINWIDTH = 600;
-GLuint WINHEIGHT = 600;
-
-GLuint WINLOCKX = 0;
-GLuint WINLOCKY = 0;
-
-GLboolean debugMode = GL_FALSE;
-
-GLboolean bQuit = GL_FALSE;
-
-std::vector<meshLoader*> scenes;
-Camera camera = Camera();
-GLfloat x = 0;
-GLfloat y = 0;
-
-int WINAPI WinMain(HINSTANCE hInstance,
-		HINSTANCE ,
-		LPSTR ,
-		int nCmdShow)
+#include "../headers/Textures.h"
+#include "../headers/DrawHandler.h"
+#include <hid.hpp>
+static void error_callback(int , const char* description)
 {
-	WNDCLASSEX wcex;
-	HWND hwnd;
-	HDC hDC;
-	HGLRC hRC;
-	MSG msg;
-	/* register window class */
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.style = CS_OWNDC;
-	wcex.lpfnWndProc = WindowProc;
-	wcex.cbClsExtra = WINLOCKX;
-	wcex.cbWndExtra = WINLOCKY;
-	wcex.hInstance = hInstance;
-	wcex.hIcon = LoadIcon(NULL, IDI_APPLICATION);
-	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = "GLSample";
-	wcex.hIconSm = LoadIcon(NULL, IDI_APPLICATION);;
-
-
-	if (!RegisterClassEx(&wcex))
-		return 0;
-
-	setScreenSize();
-
-	/* create main window */
-	hwnd = CreateWindowEx(0,
-			"GLSample",
-			"OpenGL Sample",
-			WS_POPUP,
-			0,
-			0,
-			WINWIDTH,
-			WINHEIGHT,
-			NULL,
-			NULL,
-			hInstance,
-			NULL);
-
-	ShowWindow(hwnd, nCmdShow);
-
-	/* enable OpenGL for the window */
-	EnableOpenGL(hwnd, &hDC, &hRC);
-	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Peugeot 207\\Peugeot_207.3DS"));
-	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Sirus5 Colonial City\\sirus city.obj"));
-	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Mustang gt500kr\\mustang_gt500kr.3ds"));
-	scenes.push_back(new meshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Volkswagen Touareg 2\\model\\Touareg.3DS"));
-	//textures* tex= new textures(scenes[1]->getScene(), scenes[1]->getPath());
-	//tex->bindTextures("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
-	std::map<std::string, GLuint*> texMap;// = tex->getTextureIdMap();
-	camera.setPosition(0.0, 0.0, 5.0);
-	camera.setLookAt(0.0, 0.0, -1.0);
-
-	phosphorus::human_interface_device(hwnd, GLFW_STICKY_KEYS, GL_TRUE);
-	/* program main loop */
-	while (!bQuit)
-	{
-		/* check for messages */
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			/* handle dispatch message */
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-
-		}
-		drawHandle(hDC, scenes, texMap, &camera);
-	}
-
-	/* shutdown OpenGL */
-	disableOpenGL(hwnd, hDC, hRC);
-
-	/* destroy the window explicitly */
-	DestroyWindow(hwnd);
-
-	return msg.wParam;
+    fputs(description, stderr);
 }
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+/*static void key_callback(GLFWwindow* window, int key, int , int action, int )
 {
-	float velocity = 0.5;
-	glm::vec3 newPosition;
-	glm::vec4 trans;
-	glm::vec3 rotated;
-	glm::vec3 newForward;
-	switch (uMsg)
-	{
-	case WM_DESTROY:
-		return 0;
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, GL_TRUE);
+}*/
+int main(void)
+{
+    GLFWwindow* window;
+    glfwSetErrorCallback(error_callback);
+    if (!glfwInit())
+        exit(EXIT_FAILURE);
+    window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+    if (!window)
+    {
+        glfwTerminate();
+        exit(EXIT_FAILURE);
+    }
+    glfwMakeContextCurrent(window);
+    //glfwSetKeyCallback(window, key_callback);
 
-	case WM_KEYDOWN:
-	{
-		switch (wParam)
-		{
-		case VK_ESCAPE:
-			bQuit = GL_TRUE;
-			break;
-		case VK_UP://move towards lookat
-			camera.zoom(velocity);
-			break;
-		case VK_DOWN://move away from lookat
-			camera.zoom(-velocity);
-			break;
-		case VK_RIGHT:
-			break;
-		case VK_LEFT:
-			break;
-		case VK_NUMPAD8:
-			camera.turn (0.0, 1.0, velocity);
-			break;
-		case VK_NUMPAD5:
-			camera.turn (0.0, -1.0, velocity);
-			break;
-		case VK_NUMPAD4:
-			camera.turn (1.0, 0.0, velocity);
-			break;
-		case VK_NUMPAD6:
-			camera.turn (-1.0, 0.0, velocity);
-			break;
-		case VK_SPACE:
-			break;
-		case 87:
-			camera.moveForward(velocity);
-			break;
-		case 83:
-			camera.moveForward(-velocity);
-			break;
-		case 65:
-			camera.moveRight(-velocity);
-			break;
-		case 68:
-			camera.moveRight(velocity);
-			break;
-		default:
-			cout<<wParam<<endl;
-			break;
-		}
-	}
-	break;
+    /*Graphics things*/
+    DrawHandler hDraw(window);
+    MeshLoader mesh1 = MeshLoader("C:\\Users\\Ervin\\workspace2\\phosphorus\\src\\graphics\\Zaralok.obj",
+    		"C:\\Users\\Ervin\\workspace2\\phosphorus\\src\\graphics\\");
+    CustomMesh customMesh = CustomMesh(
+    				new glm::vec3(-1.0, 0.0, -1.0),
+    				new glm::vec3(-1.0, 0.0, 1.0),
+    				new glm::vec3(1.0, 0.0, 1.0),
+    				new glm::vec3(1.0, 0.0, -1.0),
+    				"C:\\Users\\Ervin\\workspace2\\phosphorus\\src\\graphics\\Textures\\9325284-green-grass-texture.tga"
+    				);
+    Camera camera1 = Camera();
+    Camera camera2 = Camera();
+	camera1.setPosition(0.0, 0.0, 1.0);
+	camera1.setLookAt(0.0, 0.0, 0.0);
+	camera2.setPosition(0.0, 2.0, 1.0);
+	camera2.setLookAt(0.0, 0.0, 0.0);
+	mesh1.setTranslation(0, 0, -1);
+	mesh1.setScale(0.01f);
+	mesh1.setRotations(0.0, 33.0, 0.0f);
+    hDraw.addMeshLoader(&mesh1);
+	hDraw.addCamera(&camera1);
+	hDraw.addCamera(&camera2);
+	hDraw.addCustomMesh(&customMesh);
 
+	auto hid = phosphorus::human_interface_device(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	default:
-		return DefWindowProc(hwnd, uMsg, wParam, lParam);
-	}
+	hid.poll();
+	std::pair<double, double> current = hid.get_cursor_position();
+	std::pair<double, double> previous = hid.get_cursor_position();
+    while (!glfwWindowShouldClose(window))
+    {
 
-	return 0;
-}
+    	hid.poll();
+    	current = hid.get_cursor_position();
+    	hid.on_mouse_down(phosphorus::mouse_button::left,
+    			[&]{hDraw.getCurrentCamera()->turn ((current.first - previous.first), (current.second - previous.second), 0.005);});
+    	hid.on_key_down('W', [&]{hDraw.getCurrentCamera()->moveForward(0.05);});
+    	hid.on_key_down('S', [&]{hDraw.getCurrentCamera()->moveForward(-0.05);});
+    	hid.on_key_down('A', [&]{hDraw.getCurrentCamera()->moveRight(-0.05);});
+    	hid.on_key_down('D', [&]{hDraw.getCurrentCamera()->moveRight(0.05);});
 
-void setScreenSize(){
-	HWND desktop = GetDesktopWindow();
-	RECT screenSize;
+    	hid.on_key_down('1', [&]{hDraw.setCurrentCamera(1);});
+    	hid.on_key_down('2', [&]{hDraw.setCurrentCamera(1);});
 
-	GetWindowRect(desktop, &screenSize);
+    	hDraw.draw();
 
-	if (debugMode == GL_FALSE){
-		WINWIDTH = screenSize.right;
-		WINHEIGHT = screenSize.bottom;
-	}
-
-
+    	previous = current;
+    }
+    glfwDestroyWindow(window);
+    glfwTerminate();
+    exit(EXIT_SUCCESS);
 }

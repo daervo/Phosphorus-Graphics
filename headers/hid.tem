@@ -111,10 +111,28 @@ namespace phosphorus
         return false;
     }
     
-    const std::pair<double, double>& human_interface_device::get_cursor_position() { return cursor_position; }
+    const std::pair<float, float>& human_interface_device::get_cursor_position() const { return cursor_position; }
+    const std::pair<float, float>& human_interface_device::get_scroll_value() const { return scroll_value; }
+    
+    std::pair<float, float> human_interface_device::cursor_delta()
+    {
+        auto delta = std::make_pair(cursor_position.first - previous_cursor_position.first, cursor_position.second - previous_cursor_position.second);
+        previous_cursor_position = cursor_position;
+        return delta;
+    }
+    
+    std::pair<float, float> human_interface_device::scroll_delta()
+    {
+        auto delta = std::make_pair(scroll_value.first - previous_scroll_value.first, scroll_value.second - previous_scroll_value.second);
+        previous_scroll_value = scroll_value;
+        return delta;
+    }
+
     bool human_interface_device::is_key_down(const int key)               { return key_pressed[key + 1] == state::down;   }
     bool human_interface_device::is_key_is_up(const int key)              { return key_pressed[key + 1] == state::up;     }
     
     bool human_interface_device::is_key_down(const mouse_button key)         { return mouse_pressed[key] == state::down; }
     bool human_interface_device::is_key_is_up(const mouse_button key)        { return mouse_pressed[key] == state::up;   }
+    
+    
 }

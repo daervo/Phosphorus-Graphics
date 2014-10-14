@@ -12,7 +12,7 @@
 #include "AssImpHeaders.h"
 #include <IL\il.h>
 
-class textures{
+class Textures{
 	std::map<std::string, GLuint*> textureIdMap;	// map image filenames to textureIds
 	GLuint*	textureIds;							// pointer to texture Array
 	int numTextures;
@@ -21,17 +21,16 @@ public:
 	/**
 	 * constructs texture data from scene and path
 	 * @param scene scene object
-	 * @param path path to the model
 	 */
-	textures(const aiScene *scene);
-	~textures();
+	Textures(const aiScene *scene);
+	~Textures();
 	/**
 	 * populates the textureIdMap from the texture images.
 	 * Note: only currently works with single image textures
 	 * @param basepath the base path of the texture images
 	 * @return true if successful
 	 */
-	bool bindTextures(char* const basepath);
+	bool bindTextures(const char* const basepath);
 
 	/**
 	 * returns the textureIdMap.

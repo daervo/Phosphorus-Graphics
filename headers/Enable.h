@@ -9,7 +9,7 @@
  * @param hDC HDC*
  * @param hRC HGLRC*
  */
-void EnableOpenGL(HWND hwnd, HDC* hDC, HGLRC* hRC);
+//void EnableOpenGL(HWND hwnd, HDC* hDC, HGLRC* hRC);
 
 #endif // ENABLE_H_INCLUDED
 

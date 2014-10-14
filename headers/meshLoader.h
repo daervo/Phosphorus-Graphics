@@ -9,15 +9,21 @@
 #define MESHLOADER_H_
 
 #include <vector>
-#include "../headers/mesh.h"
 #include "SuperHeader.h"
+#include "AssImpHeaders.h"
 #include <glm/glm.hpp>
 
-class meshLoader{
+class MeshLoader{
 	const aiScene* mScene;
 	std::string path;
 	std::map<std::string, GLuint*> textureIdMap;
-	std::vector<mesh*> meshes;
+	float x = 0;
+	float y = 0;
+	float z = 0;
+	float xRot = 0;
+	float yRot = 0;
+	float zRot = 0;
+	float scale = 1.0;
 private:
 	void recursiveProcess(const aiScene* sc, aiNode* nd,  float scale);
 	void apply_material(const struct aiMaterial *mtl);
@@ -29,19 +35,14 @@ public:
 	/**
 	 * loads the scene from a file
 	 * @param filename path to the file
+	 * @param file path to the textures. Defaults to null
 	 */
-	meshLoader(std::string filename);
-	~meshLoader();
+	MeshLoader(std::string const filename, std::string const textureBasePath = "");
+	~MeshLoader();
 	/**
 	 * draws each mesh recursively
-	 * @param textureIdMap texture map
 	 */
-	void draw(std::map<std::string, GLuint*> textureIdMap);
-	/**
-	 * returns the meshes
-	 * @return vector of meshes
-	 */
-	std::vector<mesh*>& getMeshes();
+	void draw();
 	/**
 	 * returns while scene
 	 * @return scene
@@ -53,6 +54,19 @@ public:
 	 */
 	std::string getPath(){
 		return path;
+	}
+	void setScale(float nScale){
+		scale = nScale;
+	}
+	void setRotations(float x_rot, float y_rot, float z_rot){
+		xRot = x_rot;
+		yRot = y_rot;
+		zRot = z_rot;
+	}
+	void setTranslation(float _x, float _y, float _z){
+		x = _x;
+		y = _y;
+		z = _z;
 	}
 };
 

@@ -1,10 +1,11 @@
 #include "../headers/meshLoader.h"
+#include "../headers/Textures.h"
 using namespace std;
 
 
 
 
-void meshLoader::recursiveProcess(const aiScene* sc, aiNode* nd,  float scale)
+void MeshLoader::recursiveProcess(const aiScene* sc, aiNode* nd,  float scale)
 {
 	unsigned int i;
 	unsigned int n=0, t;
@@ -91,7 +92,7 @@ void meshLoader::recursiveProcess(const aiScene* sc, aiNode* nd,  float scale)
 	glPopMatrix();
 }
 
-void meshLoader::apply_material(const struct aiMaterial *mtl)
+void MeshLoader::apply_material(const struct aiMaterial *mtl)
 {
 	float c[4];
 
@@ -102,21 +103,19 @@ void meshLoader::apply_material(const struct aiMaterial *mtl)
 	aiColor4D ambient;
 	aiColor4D emission;
 	float shininess, strength;
-	//int two_sided;
+//	int two_sided;
 	int wireframe;
 	unsigned int max;
 
 	int texIndex = 0;
-	aiString* texPath = NULL;
+	aiString texPath;
 
 	if (!textureIdMap.empty()){
-		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, texPath))
+		if(AI_SUCCESS == mtl->GetTexture(aiTextureType_DIFFUSE, texIndex, &texPath))
 		{
 			//bind texture
-			if (texPath != NULL){
-				unsigned int texId = *textureIdMap[texPath->data];
-				glBindTexture(GL_TEXTURE_2D, texId);
-			}
+            unsigned int texId = *textureIdMap[texPath.data];
+            glBindTexture(GL_TEXTURE_2D, texId);
 		}else{
 			//cout << "no texture found in " << texPath.data << endl;
 
@@ -176,7 +175,7 @@ void meshLoader::apply_material(const struct aiMaterial *mtl)
 		glEnable(GL_CULL_FACE);*/
 }
 
-meshLoader::meshLoader(std::string filename)
+MeshLoader::MeshLoader(std::string const filename, std::string const textureBasePath)
 {//loads data from the file using assimp
 	path = filename;
 	const aiScene* scene=aiImportFile(filename.data(),
@@ -192,40 +191,43 @@ meshLoader::meshLoader(std::string filename)
 	}else{
 		std::cout << "The file was successfuly opened " << filename << std::endl;
 		mScene = scene;
+		if (!textureBasePath.empty()){
+			Textures textureLoader(scene);
+			textureLoader.bindTextures(textureBasePath.c_str());
+			textureIdMap = textureLoader.getTextureIdMap();
+		}else{
+			cout<<"string is empty"<<endl;
+		}
 	}
 }
 
-const aiScene* meshLoader::getScene(){
+const aiScene* MeshLoader::getScene(){
 	return mScene;
 }
 
-meshLoader::~meshLoader()
+MeshLoader::~MeshLoader()
 {
-	for(unsigned int i=0;i<meshes.size();i++)
-		delete meshes[i];
 }
 
-void meshLoader::draw(std::map<std::string, GLuint*> textureIdMap)
+void MeshLoader::draw()
 {
-	this->textureIdMap = textureIdMap;
-	recursiveProcess(mScene, mScene->mRootNode, 0.05);
+	glPushMatrix();
+		glTranslatef(x, y, z);
+		glRotatef(zRot, 0.0f, 0.0f, 1.0f);
+		glRotatef(yRot, 0.0f, 1.0f, 0.0f);
+		glRotatef(xRot, 1.0f, 0.0f, 0.0f);
+		recursiveProcess(mScene, mScene->mRootNode, scale);
+	glPopMatrix();
 }
 
-std::vector<mesh*>& meshLoader::getMeshes()
-{
-	return meshes;
-}
-
-
-
-void meshLoader::Color4f(const aiColor4D *color)
+void MeshLoader::Color4f(const aiColor4D *color)
 {
 	glColor4f(color->r, color->g, color->b, color->a);
 }
 
 
 /* ---------------------------------------------------------------------------- */
-void meshLoader::color4_to_float4(aiColor4D *c, float f[4])
+void MeshLoader::color4_to_float4(aiColor4D *c, float f[4])
 {
 	f[0] = c->r;
 	f[1] = c->g;
@@ -234,7 +236,7 @@ void meshLoader::color4_to_float4(aiColor4D *c, float f[4])
 }
 
 /* ---------------------------------------------------------------------------- */
-void meshLoader::set_float4(float f[4], float a, float b, float c, float d)
+void MeshLoader::set_float4(float f[4], float a, float b, float c, float d)
 {
 	f[0] = a;
 	f[1] = b;

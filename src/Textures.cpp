@@ -8,14 +8,13 @@
 #include "../headers/SuperHeader.h"
 
 
-textures::textures(const aiScene *scene){
-
+Textures::Textures(const aiScene *scene){
 
 
 	/* Before calling ilInit() version should be checked. */
 	if (ilGetInteger(IL_VERSION_NUM) < IL_VERSION)
 	{
-		//ILint test = ilGetInteger(IL_VERSION_NUM);
+//		ILint test = ilGetInteger(IL_VERSION_NUM);
 		/// wrong DevIL version ///
 		std::string err_msg = "Wrong DevIL version. Old devil.dll in system32/SysWow64?";
 		char* cErr_msg = (char *) err_msg.c_str();
@@ -32,7 +31,7 @@ textures::textures(const aiScene *scene){
 	{
 		int texIndex = 0;
 		aiReturn texFound = AI_SUCCESS;
-		bool exit = FALSE;
+		bool exit = false;
 
 		aiString path;	// filename
 
@@ -45,7 +44,7 @@ textures::textures(const aiScene *scene){
 				cout << "path data is  "<<  path.C_Str() << " adding " << endl;
 			}else{
 				cout<<"not found"<<endl;
-				exit = TRUE;
+				exit = true;
 			}
 			texIndex++;
 		}
@@ -73,7 +72,7 @@ textures::textures(const aiScene *scene){
 }
 
 
-textures::~textures(){
+Textures::~Textures(){
 	ilDeleteImages(numTextures, imageIds); /* Because we have already copied image data into texture data
 			we can release memory used by image. */
 
@@ -82,10 +81,10 @@ textures::~textures(){
 	imageIds = NULL;
 }
 
-bool textures::bindTextures(char* const basepath)
+bool Textures::bindTextures(const char* const basepath)
 {
 
-	ILboolean success = TRUE;
+	ILboolean success = true;
 	/* get iterator */
 	std::map<std::string, GLuint*>::iterator itr = textureIdMap.begin();
 
@@ -119,7 +118,7 @@ bool textures::bindTextures(char* const basepath)
 			{
 				/* Error occured */
 				cout<< "Couldn't convert image" <<endl;
-				return FALSE;
+				return false;
 			}
 			glGenTextures(numTextures, &textureIds[i]); /* Texture name generation */
 			glBindTexture(GL_TEXTURE_2D, textureIds[i]); /* Binding of texture name */
@@ -134,7 +133,8 @@ bool textures::bindTextures(char* const basepath)
 			cout<<"binded image"<<endl;
 		}else{
 			/* Error occured */
-			MessageBox(NULL, ("Couldn't load Image: " + fileloc).c_str() , "ERROR", MB_OK | MB_ICONEXCLAMATION);
+			//MessageBox(NULL, ("Couldn't load Image: " + fileloc).c_str() , "ERROR", MB_OK | MB_ICONEXCLAMATION);
+			std::cerr << "Couldn't load Image: " << fileloc << std::endl;
 		}
 
 	}

@@ -10,10 +10,11 @@
 #ifndef PHOSPHORUS_HID_HPP11_INCLUDED
 #define PHOSPHORUS_HID_HPP11_INCLUDED
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include <array>
 #include <utility>
 #include <deque>
+#include <entity/timer.hpp>
 
 namespace phosphorus
 {
@@ -27,10 +28,14 @@ namespace phosphorus
         static GLFWwindow* window;
         static std::array<state, mouse_button::eight>                 mouse_pressed;
         static std::array<state, hid_consts::keys>                    key_pressed;
-        static std::pair<double, double>                              cursor_position;
+        static std::pair<float, float>                                cursor_position;
+        static std::pair<float, float>                                previous_cursor_position;
+        static std::pair<float, float>                                scroll_value, previous_scroll_value;
         static std::array<int, hid_consts::sequence_size>             key_sequence, mouse_sequence;
         static std::deque<std::array<int, hid_consts::sequence_size>> saved_key_sequence, saved_mouse_sequence;
         static char                                                   key_count, mouse_count;
+        
+        timer                                                         m_timer;
 
         human_interface_device(const human_interface_device&)              = delete;
         human_interface_device& operator=(const human_interface_device&)   = delete;
@@ -38,8 +43,9 @@ namespace phosphorus
         static void keyboard_callback(GLFWwindow*, int key, int, int action, int);
         static void mouse_button_callback(GLFWwindow*, int key, int, int action);
         static void mouse_cursor_callback(GLFWwindow*, double x, double y);
+        static void scroll_callback(GLFWwindow*, double x, double y);
     public:
-        human_interface_device(GLFWwindow* w, int input_type, bool truth) noexcept;
+        human_interface_device(GLFWwindow* w, int input_type, bool truth);
         
         human_interface_device(human_interface_device&&);
         human_interface_device&& operator=(const human_interface_device&&);
@@ -59,7 +65,7 @@ namespace phosphorus
          * $post-condition:      none
          * $side-effects:        device interrupt, accessing a non-constant variable
          */
-        void poll(bool input_enabled = true, double time = 1.0);
+        void poll(bool input_enabled = true, const std::chrono::nanoseconds& time = 1500_ms);
         
         std::array<int, hid_consts::sequence_size> get_key_sequence(const unsigned char x)
         {
@@ -207,10 +213,14 @@ namespace phosphorus
         template <typename T>
         inline bool is_cursor_at_coordinates(const T& coords);
         
-        inline const std::pair<double, double>& get_cursor_position();
+        inline const std::pair<float, float>& get_cursor_position() const;
+        inline const std::pair<float, float>& get_scroll_value() const;
         
         template <typename T, typename U>
         inline bool on_cursor_at_coordinates(const T& coords, const U& action);
+        
+        inline std::pair<float, float> cursor_delta();
+        inline std::pair<float, float> scroll_delta();
     };
 }
 #include "hid.tem"
