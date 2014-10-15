@@ -98,7 +98,8 @@ namespace phosphorus
         // are we allowed to scan for input?
         if (input_enabled)
         {
-            glfwWaitEvents();
+            //glfwWaitEvents();
+        	glfwPollEvents();
             
             // are we allowed to do input sequencing?
             if (m_timer.expired())

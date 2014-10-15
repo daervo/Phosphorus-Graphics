@@ -9,6 +9,7 @@ void MeshLoader::recursiveProcess(const aiScene* sc, aiNode* nd,  float scale)
 {
 	unsigned int i;
 	unsigned int n=0, t;
+	glm::vec3 toAdd;
 	aiMatrix4x4 m = nd->mTransformation;
 
 	m.Scaling(aiVector3D(scale, scale, scale), m);
@@ -75,6 +76,13 @@ void MeshLoader::recursiveProcess(const aiScene* sc, aiNode* nd,  float scale)
 
 					glNormal3fv(&mesh->mNormals[vertexIndex].x);
 					glVertex3fv(&mesh->mVertices[vertexIndex].x);
+					toAdd = glm::vec3(mesh->mVertices[vertexIndex].x, mesh->mVertices[vertexIndex].y, mesh->mVertices[vertexIndex].z);
+					toAdd = glm::rotate(toAdd, xRot, glm::vec3(1, 0, 0));
+					toAdd = glm::rotate(toAdd, yRot, glm::vec3(0, 1, 0));
+					toAdd = glm::rotate(toAdd, zRot, glm::vec3(0, 0, 1));
+					toAdd = glm::vec3(glm::scale(glm::vec3(scale, scale, scale))*glm::vec4(toAdd, 1));
+					toAdd = glm::vec3(glm::translate(glm::vec3(x, y, z))*glm::vec4(toAdd, 1));
+					vertices.push_back(toAdd);
 			}
 
 			glEnd();
@@ -178,6 +186,7 @@ void MeshLoader::apply_material(const struct aiMaterial *mtl)
 MeshLoader::MeshLoader(std::string const filename, std::string const textureBasePath)
 {//loads data from the file using assimp
 	path = filename;
+	//vertices = new std::vector<glm::vec3>;
 	const aiScene* scene=aiImportFile(filename.data(),
 			aiProcess_GenSmoothNormals |
 			aiProcess_Triangulate      |
@@ -211,6 +220,7 @@ MeshLoader::~MeshLoader()
 
 void MeshLoader::draw()
 {
+	vertices.clear();
 	glPushMatrix();
 		glTranslatef(x, y, z);
 		glRotatef(zRot, 0.0f, 0.0f, 1.0f);

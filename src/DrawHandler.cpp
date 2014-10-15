@@ -65,12 +65,12 @@ void DrawHandler::draw(){
 
 	//Draw all objects
 	for (unsigned int i = 0; i < meshLoaders.size(); i++){
-		//meshLoaders[i]->draw();
+		meshLoaders[i]->draw();
 	}
 
 	//Draw CustomMeshes
 	for (unsigned int i = 0; i < meshLoaders.size(); i++){
-		customMeshes[i]->draw();
+		//customMeshes[i]->draw();
 	}
 	glPopMatrix();
 	glfwSwapBuffers(window);

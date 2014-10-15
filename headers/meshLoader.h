@@ -12,6 +12,8 @@
 #include "SuperHeader.h"
 #include "AssImpHeaders.h"
 #include <glm/glm.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 class MeshLoader{
 	const aiScene* mScene;
@@ -24,6 +26,7 @@ class MeshLoader{
 	float yRot = 0;
 	float zRot = 0;
 	float scale = 1.0;
+	vector<glm::vec3> vertices;
 private:
 	void recursiveProcess(const aiScene* sc, aiNode* nd,  float scale);
 	void apply_material(const struct aiMaterial *mtl);
@@ -67,6 +70,9 @@ public:
 		x = _x;
 		y = _y;
 		z = _z;
+	}
+	const vector<glm::vec3>& getVertices(){
+		return vertices;
 	}
 };
 
