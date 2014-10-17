@@ -7,6 +7,12 @@
 #include <hid.hpp>
 #include <physics/physics.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <networks/GameState.h>
+#include <networks/GameClient.h>
+#include <networks/GamePacket.h>
+
+using namespace phosphorus;
+
 static void error_callback(int , const char* description)
 {
     fputs(description, stderr);
@@ -33,9 +39,9 @@ int main(void)
 
     /*Graphics things*/
     DrawHandler hDraw(window);
-    MeshLoader mesh1 = MeshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Zaralok.obj",
+    MeshLoader otherPlayer = MeshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\Zaralok.obj",
     		"C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\");
-    MeshLoader monkey = MeshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\test.3ds");
+    MeshLoader bullet = MeshLoader("C:\\Users\\Ervin\\workspace2\\Phosphorus-Graphics\\test.3ds");
     CustomMesh customMesh = CustomMesh(
     				new glm::vec3(-1.0, 0.0, -1.0),
     				new glm::vec3(-1.0, 0.0, 1.0),
@@ -50,15 +56,15 @@ int main(void)
 	camera2.setPosition(5.0, 0.0, 0.0);
 	camera2.setLookAt(4.0, 0.0, 0.0);
 	//mesh1.setTranslation(0, 0, -1);
-	mesh1.setScale(0.01f);
+	otherPlayer.setScale(0.01f);
 	//mesh1.setRotations(0.0, 33.0, 0.0f);
-    hDraw.addMeshLoader(&mesh1);
+    hDraw.addMeshLoader(&otherPlayer);
 	hDraw.addCamera(&camera1);
 	hDraw.addCamera(&camera2);
 	hDraw.addCustomMesh(&customMesh);
-	hDraw.addMeshLoader(&monkey);
-	monkey.setScale(0.1);
-	phosphorus::physics::PhysicalObject mesh1_phys = phosphorus::physics::PhysicalObject(glm::vec3(0, 0, 0),
+	hDraw.addMeshLoader(&bullet);
+	bullet.setScale(0.1);
+	phosphorus::physics::PhysicalObject otherPlayer_phys = phosphorus::physics::PhysicalObject(glm::vec3(0, 0, 0),
 			glm::vec3(0, 0, 0),
 			false,
 			1.0
@@ -70,16 +76,27 @@ int main(void)
 	std::pair<double, double> current = hid.get_cursor_position();
 	std::pair<double, double> previous = hid.get_cursor_position();
 	glm::vec3 shootAt;
-	phosphorus::physics::PhysicalObject monkey_phys = phosphorus::physics::PhysicalObject(glm::vec3(0, 0, 0),
+	phosphorus::physics::PhysicalObject bullet_phys = phosphorus::physics::PhysicalObject(glm::vec3(0, 0, 0),
 			glm::vec3(0, 0, 0),
 			false,
 			1.0
 			);
-	monkey.setTranslation(10, 10, 10);
-	monkey_phys.set_position(glm::vec3(10, 10, 10));
+	bullet.setTranslation(10, 10, 10);
+	bullet_phys.set_position(glm::vec3(10, 10, 10));
+
+	//Player stats
+	float hp = 100;
+
+	//Server vars
+	GameClient gc = GameClient();
+	GamePacket gp = GamePacket();
+	GameState gs = GameState(0);
+	char packet[36];
+	char reply [76];
 
     while (!glfwWindowShouldClose(window))
     {
+    	//Set HID controls
     	hid.poll();
     	current = hid.get_cursor_position();
     	hid.on_mouse_down(phosphorus::mouse_button::left,
@@ -90,23 +107,41 @@ int main(void)
     	hid.on_key_down('D', [&]{hDraw.getCurrentCamera()->moveRight(0.05);});
     	hid.on_key_down(GLFW_KEY_LEFT_SHIFT, [&]{
     		//set phys object to camera location
-    		monkey_phys.set_position(camera2.getPosition());
-        	monkey.setTranslation(monkey_phys.position().x, monkey_phys.position().y, monkey_phys.position().z);
+    		bullet_phys.set_position(camera2.getPosition());
+        	bullet.setTranslation(bullet_phys.position().x, bullet_phys.position().y, bullet_phys.position().z);
         	shootAt = -100.0f * glm::normalize(camera2.getPosition() - camera2.getLookAt());
 
-    		monkey_phys.apply_force(&shootAt);
+        	bullet_phys.apply_force(&shootAt);
     	});
 
     	hid.on_key_down('1', [&]{hDraw.setCurrentCamera(0);});
     	hid.on_key_down('2', [&]{hDraw.setCurrentCamera(1);});
 
-    	hDraw.draw();
-    	monkey_phys.update_position(0.01);
-    	monkey.setTranslation(monkey_phys.position().x, monkey_phys.position().y, monkey_phys.position().z);
+    	//update position of bullet
+    	bullet_phys.update_position(0.01);
+    	bullet.setTranslation(bullet_phys.position().x, bullet_phys.position().y, bullet_phys.position().z);
 
-    	if (phosphorus::physics::GJK_collision(monkey.getVertices(), mesh1.getVertices())){
+    	//Draw
+    	hDraw.draw();
+
+    	//Check for collision
+    	if (phosphorus::physics::GJK_collision(bullet.getVertices(), otherPlayer.getVertices())){
     		cout<<"hit!!"<<endl;
     	}
+
+    	//Send To Server
+    	gc.startConnection(8085, "localhost");
+    	gp.createUpdatePacket(packet, 0, camera2.getPosition(), camera2.getLookAt(), hp);
+    	gc.sendToServer(packet, reply);
+    	gs.updateState(reply);
+    	gc.close();
+
+    	//Update client state
+    	otherPlayer.setTranslation(gs.get(gs.PLAYER_0_POSITION, 1),
+    			gs.get(gs.PLAYER_0_POSITION+4, 1),
+    			gs.get(gs.PLAYER_0_POSITION+8, 1)
+    			);
+
 
     	previous = current;
     }
