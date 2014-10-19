@@ -19,31 +19,27 @@ GameState::~GameState() {
 }
 
 void GameState::updateState(char* buffer, int player){
-	int playerOffset = player*PLAYER_PACKET_SIZE;
-	std::cout<<"player id is ("<<PLAYER_0_ID + playerOffset <<")"<<(int)buffer[PLAYER_0_ID]<<std::endl;
-	gameStateBuffer[PLAYER_0_ID + playerOffset] = (int)buffer[PLAYER_0_ID];
+	int playerOffset = player*GAME_PACKET_SIZE;
+	std::cout<<"player id is ("<<GS_PLAYER_NUMBER + playerOffset <<")"<<(int)buffer[GS_PLAYER_NUMBER]<<std::endl;
+	//gameStateBuffer[GS_PLAYER_NUMBER + playerOffset] = networkStringToFloat(buffer, GS_PLAYER_NUMBER);
 
 	//set player position
-	std::cout<<"player position is ("<<PLAYER_0_POSITION + playerOffset <<")"<<(float)buffer[PLAYER_0_POSITION]<<" "<<(float)buffer[PLAYER_0_POSITION + 4]<<" "
-			<<(float)buffer[PLAYER_0_POSITION + 8]<<std::endl;
-	gameStateBuffer[PLAYER_0_POSITION + playerOffset] = (float)buffer[PLAYER_0_POSITION];
-	gameStateBuffer[PLAYER_0_POSITION + playerOffset+4] = (float)buffer[PLAYER_0_POSITION+4];
-	gameStateBuffer[PLAYER_0_POSITION + playerOffset+8] = (float)buffer[PLAYER_0_POSITION+8];
+	std::cout<<"player position is ("<<GS_PLAYER_POSITION_X + playerOffset <<")"<<networkStringToFloat(buffer, GS_PLAYER_POSITION_X)<<" "<<networkStringToFloat(buffer, GS_PLAYER_POSITION_Y)<<" "
+			<<networkStringToFloat(buffer, GS_PLAYER_POSITION_Z)<<std::endl;
+	//gameStateBuffer[GS_PLAYER_POSITION_X] = networkStringToFloat(buffer, GS_PLAYER_POSITION_X);
+	//gameStateBuffer[GS_PLAYER_POSITION_Y] = networkStringToFloat(buffer, GS_PLAYER_POSITION_Y);
+	//gameStateBuffer[GS_PLAYER_POSITION_Z] = networkStringToFloat(buffer, GS_PLAYER_POSITION_Z);
 
 	//set player direction
-	std::cout<<"player position is ("<<PLAYER_0_DIRECTION + playerOffset <<")"<<(float)buffer[PLAYER_0_DIRECTION]<<" "<<(float)buffer[PLAYER_0_DIRECTION + 4]<<" "
-			<<(float)buffer[PLAYER_0_DIRECTION + 8]<<std::endl;
-	gameStateBuffer[PLAYER_0_DIRECTION + playerOffset] = (float)buffer[PLAYER_0_DIRECTION];
-	gameStateBuffer[PLAYER_0_DIRECTION + playerOffset+4] = (float)buffer[PLAYER_0_DIRECTION+4];
-	gameStateBuffer[PLAYER_0_DIRECTION + playerOffset+8] = buffer[PLAYER_0_DIRECTION+8];
+	std::cout<<"player position is ("<<GS_PLAYER_DIRECTION_X + playerOffset <<")"<<networkStringToFloat(buffer, GS_PLAYER_DIRECTION_X)<<" "<<networkStringToFloat(buffer, GS_PLAYER_DIRECTION_Y)<<" "
+			<<networkStringToFloat(buffer, GS_PLAYER_DIRECTION_Z)<<std::endl;
+	//gameStateBuffer[GS_PLAYER_DIRECTION_X] = networkStringToFloat(buffer, GS_PLAYER_DIRECTION_X);
+	//gameStateBuffer[GS_PLAYER_DIRECTION_Y] = networkStringToFloat(buffer, GS_PLAYER_DIRECTION_Y);
+	//gameStateBuffer[GS_PLAYER_DIRECTION_Z] = networkStringToFloat(buffer, GS_PLAYER_DIRECTION_Z);
 
 	//set player hp
-	std::cout<<"player hp is ("<<PLAYER_0_HP + playerOffset <<")"<<(float)buffer[PLAYER_0_HP]<<std::endl;
-	gameStateBuffer[PLAYER_0_HP + playerOffset] = (float)buffer[PLAYER_0_HP];
-
-	for (int i = PLAYER_0_ID + playerOffset; i < 36; i+=4){
-		std::cout<<(float)gameStateBuffer[i]<<std::endl;
-	}
+	std::cout<<"player hp is ("<<GS_PLAYER_HP + playerOffset <<")"<<networkStringToFloat(buffer, GS_PLAYER_HP)<<std::endl;
+	//gameStateBuffer[GS_PLAYER_HP + playerOffset] = networkStringToFloat(buffer, GS_PLAYER_HP);
 
 }
 

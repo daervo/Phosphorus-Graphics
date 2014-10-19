@@ -19,15 +19,15 @@ GamePacket::~GamePacket() {
 }
 
 void GamePacket::createUpdatePacket(char* buffer, int playerId, glm::vec3 position, glm::vec3 direction, float hp){
-	buffer[COMMAND] = UPDATE;
-	buffer[PLAYER_ID] = playerId;
-	buffer[PLAYER_POSITION] = position.x;
-	buffer[PLAYER_POSITION+4] = position.y;
-	buffer[PLAYER_POSITION+8] = position.z;
-	buffer[PLAYER_DIRECTION] = direction.x;
-	buffer[PLAYER_DIRECTION+4] = direction.y;
-	buffer[PLAYER_DIRECTION+8] = direction.z;
-	buffer[PLAYER_HP] = hp;
+	floatToNetworkString(buffer, UPDATE, COMMAND);
+	floatToNetworkString(buffer, playerId, PLAYER_NUMBER);
+	floatToNetworkString(buffer, position.x, PLAYER_POSITION_X);
+	floatToNetworkString(buffer, position.y, PLAYER_POSITION_Y);
+	floatToNetworkString(buffer, position.z, PLAYER_POSITION_Z);
+	floatToNetworkString(buffer, direction.x, PLAYER_DIRECTION_X);
+	floatToNetworkString(buffer, direction.y, PLAYER_DIRECTION_Y);
+	floatToNetworkString(buffer, direction.z, PLAYER_DIRECTION_Z);;
+	floatToNetworkString(buffer, hp, PLAYER_HP);
 }
 
 } /* namespace phosphorus */

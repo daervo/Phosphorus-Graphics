@@ -9,18 +9,15 @@
 #define GAMECLIENT_H_
 #include <winsock.h>
 #include <iostream>
-#include "GamePacket.h"
-#define CLIENT_PACKET_SIZE 36
+#include <networks/networkConstants.hpp>
 
 namespace phosphorus {
 
 class GameClient {
 
 	SOCKET theSocket;
-private:
+
 public:
-	int const PACKET_SIZE = CLIENT_PACKET_SIZE;
-	int const REPLY_SIZE = 76;
 	GameClient();
 	virtual ~GameClient();
 	bool startConnection(int port, std::string host);

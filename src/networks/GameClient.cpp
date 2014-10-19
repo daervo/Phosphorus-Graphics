@@ -82,7 +82,7 @@ bool GameClient::sendToServer(char* buffer, char* reply){
 	std::cout << "successfully connected, sending..." << std::endl;
 	int nret;
 
-	nret = send(theSocket, buffer, CLIENT_PACKET_SIZE, 0);
+	nret = send(theSocket, buffer, GAME_PACKET_SIZE, 0);
 	if (nret == SOCKET_ERROR) {
 		std::cout << "send()" << std::endl;
 		return false;
@@ -93,7 +93,7 @@ bool GameClient::sendToServer(char* buffer, char* reply){
 
 	std::cout << "successfully connected, receiving..." << std::endl;
 
-	nret = recv(theSocket, reply, REPLY_SIZE,	// Complete size of buffer
+	nret = recv(theSocket, reply, GS_PACKET_SIZE,	// Complete size of buffer
 			0);
 	if (nret == SOCKET_ERROR) {
 		// Get a specific code

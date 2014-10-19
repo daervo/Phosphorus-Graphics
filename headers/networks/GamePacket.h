@@ -8,19 +8,12 @@
 #ifndef GAMEPACKET_H_
 #define GAMEPACKET_H_
 #include <glm/glm.hpp>
-#define SIZE 36
+#include <networks/networkConstants.hpp>
 
 namespace phosphorus {
 
 class GamePacket {
-	int const COMMAND  = 0;
-	int const PLAYER_ID = 4;
-	int const PLAYER_POSITION = 8;
-	int const PLAYER_DIRECTION = 20;
-	int const PLAYER_HP = 32;
 
-
-	int const UPDATE  = 0;
 public:
 	GamePacket();
 	virtual ~GamePacket();
