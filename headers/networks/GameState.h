@@ -17,7 +17,7 @@ namespace phosphorus {
 class GameState {
 	int gameNum;
 
-	std::array<char, GS_PACKET_SIZE> gameStateBuffer;
+	char gameStateBuffer[GS_PACKET_SIZE];
 
 	//attributes
 
@@ -34,23 +34,23 @@ public:
 	void updateState(char* buffer, int player);
 
 	void updateState(char* buffer){
-		for (int i = 0; i < GS_PACKET_SIZE; i++){
+		for (int i = 0; i < GS_PACKET_SIZE; i+=FLOAT_DIGIT_SIZE){
 			//gameStateBuffer[i] = buffer[i];
-			gameStateBuffer.at(i) = networkStringToFloat(buffer, i);
+			floatToNetworkString(gameStateBuffer, networkStringToFloat(buffer, i), i);
 		}
 	}
 
 	void getState(char* buffer){
-		for (int i = 0; i < GS_PACKET_SIZE; i++){
+		for (int i = 0; i < GS_PACKET_SIZE; i+=FLOAT_DIGIT_SIZE){
 			//buffer[i] = gameStateBuffer[i];
-			floatToNetworkString(buffer, networkStringToFloat(gameStateBuffer.data(), i), i);
+			floatToNetworkString(buffer, networkStringToFloat(gameStateBuffer, i), i);
+			std::cout<< "sending "<<networkStringToFloat(gameStateBuffer, i)<<std::endl;
 		}
 	}
 
 	float get(int attribute, int playerNum){
-		return networkStringToFloat(gameStateBuffer.data(), attribute + playerNum * GAME_PACKET_SIZE);
+		return networkStringToFloat(gameStateBuffer, attribute + playerNum * GAME_PACKET_SIZE_WITHOUT_COMMAND);
 	}
-
 };
 
 } /* namespace phosphorus */

@@ -10,6 +10,7 @@
 #include <networks/GameState.h>
 #include <networks/GameClient.h>
 #include <networks/GamePacket.h>
+#include <networks/networkConstants.hpp>
 
 using namespace phosphorus;
 
@@ -137,10 +138,12 @@ int main(void)
     	gc.close();
 
     	//Update client state
-    	otherPlayer.setTranslation(gs.get(gs.PLAYER_0_POSITION, 1),
-    			gs.get(gs.PLAYER_0_POSITION+4, 1),
-    			gs.get(gs.PLAYER_0_POSITION+8, 1)
+    	otherPlayer.setTranslation(gs.get(GS_PLAYER_POSITION_X, 1),
+    			gs.get(GS_PLAYER_POSITION_Y, 1),
+    			gs.get(GS_PLAYER_POSITION_Z, 1)
     			);
+
+    	cout<<gs.get(GS_PLAYER_POSITION_Z, 1)<<endl;
 
 
     	previous = current;

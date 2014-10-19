@@ -6,6 +6,8 @@
  */
 
 #include <networks/GamePacket.h>
+#include <networks/networkConstants.hpp>
+#include <networks/Converters.h>
 
 namespace phosphorus {
 
