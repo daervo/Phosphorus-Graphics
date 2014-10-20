@@ -32,4 +32,16 @@ void GamePacket::createUpdatePacket(char* buffer, int playerId, glm::vec3 positi
 	floatToNetworkString(buffer, hp, PLAYER_HP);
 }
 
+void GamePacket::createRegistrationPacket(char* buffer, int gameNum){
+	floatToNetworkString(buffer, REGISTER, COMMAND);
+	floatToNetworkString(buffer, gameNum, GAME_NUM);
+
+}
+
+void GamePacket::createNewGamePacket(char* buffer, int gameNum){
+	floatToNetworkString(buffer, NEW_GAME, COMMAND);
+	floatToNetworkString(buffer, gameNum, GAME_NUM);
+
+}
+
 } /* namespace phosphorus */

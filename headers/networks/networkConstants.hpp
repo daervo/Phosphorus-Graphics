@@ -13,9 +13,23 @@ const int FLOAT_DIGIT_SIZE = 10;
 const int NUM_FIELDS = 9;
 const int NUM_FIELDS_WITHOUT_COMMAND = 8;
 const int NUM_PLAYERS = 2;
+const int NO_PLAYERS = 0;
 
 // Commands
 const int UPDATE = 0;
+const int REGISTER = 1;
+const int NEW_GAME = 2;
+
+// Replies
+const int REPLY = 0;
+const int OK = 1;
+const int FAIL = -1;
+
+// New Game Fields
+const int GAME_NUM = FLOAT_DIGIT_SIZE;
+
+// Registration fields
+const int NEW_PLAYER_NUM = FLOAT_DIGIT_SIZE;
 
 // Game Packet
 const int COMMAND = 0;

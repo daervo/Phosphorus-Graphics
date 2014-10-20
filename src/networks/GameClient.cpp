@@ -79,19 +79,15 @@ bool GameClient::startConnection(int port, std::string host){
 }
 
 bool GameClient::sendToServer(char* buffer, char* reply){
-	std::cout << "successfully connected, sending..." << std::endl;
 	int nret;
 
 	nret = send(theSocket, buffer, GAME_PACKET_SIZE, 0);
 	if (nret == SOCKET_ERROR) {
 		std::cout << "send()" << std::endl;
 		return false;
-	}else{
-		std::cout << "sent " << nret << std::endl;
 	}
 
 
-	std::cout << "successfully connected, receiving..." << std::endl;
 
 	nret = recv(theSocket, reply, GS_PACKET_SIZE,	// Complete size of buffer
 			0);
@@ -103,7 +99,6 @@ bool GameClient::sendToServer(char* buffer, char* reply){
 	} else {
 		// nret contains the number of bytes received
 		if (nret > 0){
-		std::cout << "yaay" << std::endl;
 		}else{
 			std::cout<<WSAGetLastError()<<std::endl;
 		}

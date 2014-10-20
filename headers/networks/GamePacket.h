@@ -18,6 +18,8 @@ public:
 	GamePacket();
 	virtual ~GamePacket();
 	void createUpdatePacket(char* buffer, int playerId, glm::vec3 position, glm::vec3 direction, float hp);
+	void createRegistrationPacket(char* buffer, int gameNum);
+	void createNewGamePacket(char* buffer, int gameNum);
 };
 
 } /* namespace phosphorus */
