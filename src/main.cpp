@@ -74,6 +74,9 @@ int main(void)
 	playerNum = gs.get(NEW_PLAYER_NUM, NO_PLAYERS);
 	gc.close();
 	otherPlayerNum = 1 - playerNum;
+	std::cout<<"You are " << playerNum<<std::endl;
+	std::cout<<"your opponent is " << otherPlayerNum<<std::endl;
+
 
 
 
@@ -99,6 +102,10 @@ int main(void)
 	camera1.setLookAt(0.0, 0.0, 0.0);
 	camera2.setPosition(5.0, 0.0, 0.0);
 	camera2.setLookAt(4.0, 0.0, 0.0);
+	if (playerNum == 1){ // HARD CODE!!!! for testing
+		camera2.setPosition(0.0, 0.0, 0.0);
+		camera2.setLookAt(1.0, 0.0, 0.0);
+	}
 	//mesh1.setTranslation(0, 0, -1);
 	otherPlayer.setScale(0.01f);
 	//mesh1.setRotations(0.0, 33.0, 0.0f);
@@ -169,7 +176,7 @@ int main(void)
 
 		//Send To Server
 		gc.startConnection(8085, "localhost");
-		gp.createUpdatePacket(packet, 0, camera2.getPosition(), camera2.getLookAt(), hp);
+		gp.createUpdatePacket(packet, playerNum, camera2.getPosition(), camera2.getLookAt(), hp);
 		gc.sendToServer(packet, reply);
 		gs.updateState(reply);
 		gc.close();
